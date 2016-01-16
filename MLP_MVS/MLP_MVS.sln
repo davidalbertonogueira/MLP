@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLP_MVS", "MLP_MVS.vcxproj", "{6BFA9D94-B136-4985-83A1-EE76FFF6F374}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Debug|x64.ActiveCfg = Debug|x64
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Debug|x64.Build.0 = Debug|x64
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Debug|x86.ActiveCfg = Debug|Win32
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Debug|x86.Build.0 = Debug|Win32
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Release|x64.ActiveCfg = Release|x64
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Release|x64.Build.0 = Release|x64
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Release|x86.ActiveCfg = Release|Win32
+		{6BFA9D94-B136-4985-83A1-EE76FFF6F374}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
