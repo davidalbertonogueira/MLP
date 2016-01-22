@@ -1,3 +1,7 @@
+//============================================================================
+// Name : Utils.h
+// Author : David Nogueira
+//============================================================================
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -15,10 +19,11 @@ namespace utils {
 
 struct gen_rand {
   double factor;
+  double offset;
 public:
-  gen_rand(double r = 1.0) : factor(r / RAND_MAX) {}
+  gen_rand(double r = 2.0) : factor(r / RAND_MAX), offset(r / 2) {}
   double operator()() {
-    return rand() * factor;
+    return rand() * factor - offset;
   }
 };
 

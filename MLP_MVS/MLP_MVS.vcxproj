@@ -142,7 +142,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Layer.h" />
     <ClInclude Include="..\src\MLP.h" />
+    <ClInclude Include="..\src\Node.h" />
     <ClInclude Include="..\src\Sample.h" />
     <ClInclude Include="..\src\Utils.h" />
   </ItemGroup>

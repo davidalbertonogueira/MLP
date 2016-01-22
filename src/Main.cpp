@@ -2,7 +2,6 @@
 // Name : Main.cpp
 // Author : David Nogueira
 //============================================================================
-
 #include "MLP.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -101,6 +100,28 @@ void LearnNOR() {
   std::cout << std::endl;
 }
 
+void LearnXOR() {
+  std::cout << "Train XOR function with mlp." << std::endl;
+
+  std::vector<TrainingSample> training_set =
+  {
+    { { 1, 0, 0 },{ 1,0 } },
+    { { 1, 0, 1 },{ 0,1 } },
+    { { 1, 1, 0 },{ 0,1 } },
+    { { 1, 1, 1 },{ 1,0 } }
+  };
+
+  MLP my_mlp(0.1, 100, 0.5);
+  my_mlp.Train(training_set, 1, 1);
+
+  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 0);
+  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 1);
+  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 1);
+  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 0);
+  std::cout << "Trained with success." << std::endl;
+  std::cout << std::endl;
+}
+
 void LearnNOT() {
   std::cout << "Train NOT function with mlp." << std::endl;
 
@@ -124,6 +145,7 @@ int main() {
   LearnNAND();
   LearnOR();
   LearnNOR();
+  LearnXOR();
   LearnNOT();
 
   return 0;
