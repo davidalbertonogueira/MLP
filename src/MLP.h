@@ -58,6 +58,14 @@ public:
   }
 
 
+  std::vector<double> & GetOutputValues(const std::vector<double> &input);
+  int GetOutputClass(const std::vector<double> &input);
+
+  void Train(const std::vector<TrainingSample> &training_sample_set,
+                       bool bias_already_in);
+
+  //void UpdateWeight(const std::vector<double> &x,
+  //                  double error);
 private:
 
   int m_num_inputs;

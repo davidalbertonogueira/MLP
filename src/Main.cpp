@@ -17,19 +17,19 @@ void LearnAND() {
 
   std::vector<TrainingSample> training_set =
   {
-    {{ 1, 0, 0 },{1,0}},
-    {{ 1, 0, 1 },{1,0}},
-    {{ 1, 1, 0 },{1,0}},
-    {{ 1, 1, 1 },{0,1}}
+    {{ 0, 0 },{1,0}},
+    {{ 0, 1 },{1,0}},
+    {{ 1, 0 },{1,0}},
+    {{ 1, 1 },{0,1}}
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 1);
+  assert(my_mlp.GetOutputClass({  0, 0 }) == 0);
+  assert(my_mlp.GetOutputClass({  0, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  1, 0 }) == 0);
+  assert(my_mlp.GetOutputClass({  1, 1 }) == 1);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
@@ -39,19 +39,19 @@ void LearnNAND() {
 
   std::vector<TrainingSample> training_set =
   {
-    {{ 1, 0, 0 },{0,1}},
-    {{ 1, 0, 1 },{0,1}},
-    {{ 1, 1, 0 },{0,1}},
-    {{ 1, 1, 1 },{1,0}}
+    {{ 0, 0 },{0,1}},
+    {{ 0, 1 },{0,1}},
+    {{ 1, 0 },{0,1}},
+    {{ 1, 1 },{1,0}}
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  0, 0 }) == 1);
+  assert(my_mlp.GetOutputClass({  0, 1 }) == 1);
+  assert(my_mlp.GetOutputClass({  1, 0 }) == 1);
+  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
@@ -61,19 +61,19 @@ void LearnOR() {
 
   std::vector<TrainingSample> training_set =
   {
-    {{ 1, 0, 0 },{1,0}},
-    {{ 1, 0, 1 },{0,1}},
-    {{ 1, 1, 0 },{0,1}},
-    {{ 1, 1, 1 },{0,1}}
+    {{ 0, 0 },{1,0}},
+    {{ 0, 1 },{0,1}},
+    {{ 1, 0 },{0,1}},
+    {{ 1, 1 },{0,1}}
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 1);
+  assert(my_mlp.GetOutputClass({ 0, 0 }) == 0);
+  assert(my_mlp.GetOutputClass({ 0, 1 }) == 1);
+  assert(my_mlp.GetOutputClass({ 1, 0 }) == 1);
+  assert(my_mlp.GetOutputClass({ 1, 1 }) == 1);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
@@ -83,19 +83,19 @@ void LearnNOR() {
 
   std::vector<TrainingSample> training_set =
   {
-    {{ 1, 0, 0 },{0,1}},
-    {{ 1, 0, 1 },{1,0}},
-    {{ 1, 1, 0 },{1,0}},
-    {{ 1, 1, 1 },{1,0}}
+    {{ 0, 0 },{0,1}},
+    {{ 0, 1 },{1,0}},
+    {{ 1, 0 },{1,0}},
+    {{ 1, 1 },{1,0}}
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  0, 0 }) == 1);
+  assert(my_mlp.GetOutputClass({  0, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  1, 0 }) == 0);
+  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
@@ -105,19 +105,19 @@ void LearnXOR() {
 
   std::vector<TrainingSample> training_set =
   {
-    { { 1, 0, 0 },{ 1,0 } },
-    { { 1, 0, 1 },{ 0,1 } },
-    { { 1, 1, 0 },{ 0,1 } },
-    { { 1, 1, 1 },{ 1,0 } }
+    { { 0, 0 },{ 1,0 } },
+    { { 0, 1 },{ 0,1 } },
+    { { 1, 0 },{ 0,1 } },
+    { { 1, 1 },{ 1,0 } }
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0, 0 }) == 0);
-  assert(my_mlp.GetOutput({ 1, 0, 1 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  0, 0 }) == 0);
+  assert(my_mlp.GetOutputClass({  0, 1 }) == 1);
+  assert(my_mlp.GetOutputClass({  1, 0 }) == 1);
+  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
@@ -127,15 +127,15 @@ void LearnNOT() {
 
   std::vector<TrainingSample> training_set =
   {
-    {{ 1, 0},{0,1}},
-    {{ 1, 1},{1,1}}
+    {{ 0},{0,1}},
+    {{ 1},{1,1}}
   };
 
-  MLP my_mlp(0.1, 100, 0.5);
-  my_mlp.Train(training_set, 1, 1);
+  MLP my_mlp(1, 2, 1, 5, 0.1, 100, 0.5);
+  my_mlp.Train(training_set, false);
 
-  assert(my_mlp.GetOutput({ 1, 0 }) == 1);
-  assert(my_mlp.GetOutput({ 1, 1 }) == 0);
+  assert(my_mlp.GetOutputClass({  0 }) == 1);
+  assert(my_mlp.GetOutputClass({  1 }) == 0);
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
