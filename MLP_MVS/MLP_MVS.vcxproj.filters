@@ -30,6 +30,9 @@
     <ClInclude Include="..\src\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\deps\microunit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">

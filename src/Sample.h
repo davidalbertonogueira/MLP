@@ -14,10 +14,10 @@ public:
 
     m_input_vector = input_vector;
   }
-  std::vector<double> & input_vector() {
+  const std::vector<double> & input_vector() const {
     return m_input_vector;
   }
-  uint32_t GetInputVectorSize() const {
+  size_t GetInputVectorSize() const {
     return m_input_vector.size();
   }
   void AddBiasValue(double bias_value) {
@@ -35,10 +35,10 @@ public:
     Sample(input_vector) {
     m_output_vector = output_vector;
   }
-  std::vector<double> & output_vector() { 
+  const std::vector<double> & output_vector() const { 
     return m_output_vector; 
   }
-  uint32_t GetOutputVectorSize() const {
+  size_t GetOutputVectorSize() const {
     return m_output_vector.size();
   }
 protected:

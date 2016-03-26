@@ -15,6 +15,14 @@
 #include <sys/time.h>
 #endif
 
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <vector>
+#include <cmath>
+
+
+
 namespace utils {
 
 struct gen_rand {
@@ -38,6 +46,25 @@ inline double sigmoid(double x) {
 inline double deriv_sigmoid(double x) {
   return sigmoid(x)*(1 - sigmoid(x));
 };
+
+void Softmax(std::vector<double> *output) {
+  size_t num_elements = output->size();
+  std::vector<double> exp_output(num_elements);
+  double exp_total = 0.0;
+  for (int i = 0; i < num_elements; i++) {
+    exp_output[i] = exp((*output)[i]);
+    exp_total += exp_output[i];
+  }
+  for (int i = 0; i < num_elements; i++) {
+    (*output)[i] = exp_output[i] / exp_total;
+  }
+}
+
+void  GetIdMaxElement(const std::vector<double> &output, size_t * class_id) {
+  *class_id = std::distance(output.begin(),
+                                   std::max_element(output.begin(),
+                                                    output.end()));
+}
 
 class Chronometer {
 public:

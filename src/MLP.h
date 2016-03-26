@@ -23,9 +23,7 @@ public:
       int num_outputs,
       int num_hidden_layers,
       int num_nodes_per_hidden_layer,
-      double learning_rate,
-      int max_iterations,
-      double threshold) {
+      double learning_rate) {
 
     m_num_inputs = num_inputs;
     m_num_outputs = num_outputs;
@@ -33,8 +31,6 @@ public:
     m_num_nodes_per_hidden_layer = num_nodes_per_hidden_layer;
 
     m_learning_rate = learning_rate;
-    m_max_iterations = max_iterations;
-    m_threshold = threshold;
   };
 
   ~MLP() {
@@ -57,15 +53,18 @@ public:
     }
   }
 
+  size_t GetWeightMatrixCardinality()const;
+  bool ExportWeights(std::vector<double> *weights)const;
+  bool ImportWeights(const std::vector<double> & weights);
 
-  std::vector<double> & GetOutputValues(const std::vector<double> &input);
-  int GetOutputClass(const std::vector<double> &input);
+  void GetOutput(const std::vector<double> &input, std::vector<double> * output) const;
+  void GetOutputClass(const std::vector<double> &output, size_t * class_id) const;
 
   void Train(const std::vector<TrainingSample> &training_sample_set,
-                       bool bias_already_in);
-
-  //void UpdateWeight(const std::vector<double> &x,
-  //                  double error);
+             int max_iterations);
+protected:
+  void UpdateWeights(const std::vector<double> &x,
+                    double error);
 private:
 
   int m_num_inputs;
@@ -75,7 +74,6 @@ private:
 
   double m_learning_rate;
   int m_max_iterations;
-  double m_threshold;
 
   std::vector<Layer> m_layers;
 };

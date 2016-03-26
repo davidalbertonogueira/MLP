@@ -10,9 +10,9 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include <cassert>
+#include "microunit.h"
 
-void LearnAND() {
+UNIT(LearnAND) {
   std::cout << "Train AND function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -23,18 +23,22 @@ void LearnAND() {
     {{ 1, 1 },{0,1}}
   };
 
-  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(2, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({  0, 0 }) == 0);
-  assert(my_mlp.GetOutputClass({  0, 1 }) == 0);
-  assert(my_mlp.GetOutputClass({  1, 0 }) == 0);
-  assert(my_mlp.GetOutputClass({  1, 1 }) == 1);
+  for (const auto & training_sample : training_set){
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id == 
+              std::distance(training_sample.output_vector().begin(), 
+                            std::max_element(training_sample.output_vector().begin(),
+                                           training_sample.output_vector().end()) ));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
-void LearnNAND() {
+UNIT(LearnNAND) {
   std::cout << "Train NAND function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -45,18 +49,22 @@ void LearnNAND() {
     {{ 1, 1 },{1,0}}
   };
 
-  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(2, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({  0, 0 }) == 1);
-  assert(my_mlp.GetOutputClass({  0, 1 }) == 1);
-  assert(my_mlp.GetOutputClass({  1, 0 }) == 1);
-  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
+  for (const auto & training_sample : training_set) {
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id ==
+                std::distance(training_sample.output_vector().begin(),
+                              std::max_element(training_sample.output_vector().begin(),
+                                               training_sample.output_vector().end())));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
-void LearnOR() {
+UNIT(LearnOR) {
   std::cout << "Train OR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -67,18 +75,22 @@ void LearnOR() {
     {{ 1, 1 },{0,1}}
   };
 
-  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(2, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({ 0, 0 }) == 0);
-  assert(my_mlp.GetOutputClass({ 0, 1 }) == 1);
-  assert(my_mlp.GetOutputClass({ 1, 0 }) == 1);
-  assert(my_mlp.GetOutputClass({ 1, 1 }) == 1);
+  for (const auto & training_sample : training_set) {
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id ==
+                std::distance(training_sample.output_vector().begin(),
+                              std::max_element(training_sample.output_vector().begin(),
+                                               training_sample.output_vector().end())));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
-void LearnNOR() {
+UNIT(LearnNOR) {
   std::cout << "Train NOR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -89,18 +101,22 @@ void LearnNOR() {
     {{ 1, 1 },{1,0}}
   };
 
-  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(2, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({  0, 0 }) == 1);
-  assert(my_mlp.GetOutputClass({  0, 1 }) == 0);
-  assert(my_mlp.GetOutputClass({  1, 0 }) == 0);
-  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
+  for (const auto & training_sample : training_set) {
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id ==
+                std::distance(training_sample.output_vector().begin(),
+                              std::max_element(training_sample.output_vector().begin(),
+                                               training_sample.output_vector().end())));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
-void LearnXOR() {
+UNIT(LearnXOR) {
   std::cout << "Train XOR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -111,18 +127,22 @@ void LearnXOR() {
     { { 1, 1 },{ 1,0 } }
   };
 
-  MLP my_mlp(2, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(2, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({  0, 0 }) == 0);
-  assert(my_mlp.GetOutputClass({  0, 1 }) == 1);
-  assert(my_mlp.GetOutputClass({  1, 0 }) == 1);
-  assert(my_mlp.GetOutputClass({  1, 1 }) == 0);
+  for (const auto & training_sample : training_set) {
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id ==
+                std::distance(training_sample.output_vector().begin(),
+                              std::max_element(training_sample.output_vector().begin(),
+                                               training_sample.output_vector().end())));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
-void LearnNOT() {
+UNIT(LearnNOT) {
   std::cout << "Train NOT function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
@@ -131,22 +151,22 @@ void LearnNOT() {
     {{ 1},{1,1}}
   };
 
-  MLP my_mlp(1, 2, 1, 5, 0.1, 100, 0.5);
-  my_mlp.Train(training_set, false);
+  MLP my_mlp(1, 2, 1, 5, 0.1);
+  my_mlp.Train(training_set, 100);
 
-  assert(my_mlp.GetOutputClass({  0 }) == 1);
-  assert(my_mlp.GetOutputClass({  1 }) == 0);
+  for (const auto & training_sample : training_set) {
+    size_t class_id;
+    my_mlp.GetOutputClass(training_sample.input_vector(), &class_id);
+    ASSERT_TRUE(class_id ==
+                std::distance(training_sample.output_vector().begin(),
+                              std::max_element(training_sample.output_vector().begin(),
+                                               training_sample.output_vector().end())));
+  }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
 
 int main() {
-  LearnAND();
-  LearnNAND();
-  LearnOR();
-  LearnNOR();
-  LearnXOR();
-  LearnNOT();
-
+  microunit::UnitTester::Run();
   return 0;
 }
