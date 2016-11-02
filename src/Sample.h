@@ -23,7 +23,21 @@ public:
   void AddBiasValue(double bias_value) {
     m_input_vector.insert(m_input_vector.begin(), bias_value);
   }
+  friend std::ostream & operator<<(std::ostream &stream, Sample const & obj) {
+    obj.PrintMyself(stream);
+    return stream;
+  };
 protected:
+  virtual void PrintMyself(std::ostream& stream) const {
+    stream << "Input vector: [";
+    for (int i = 0; i < m_input_vector.size(); i++) {
+      if (i != 0)
+        stream << ", ";
+      stream << m_input_vector[i];
+    }
+    stream << "]";
+  }
+
   std::vector<double> m_input_vector;
 };
 
@@ -35,13 +49,34 @@ public:
     Sample(input_vector) {
     m_output_vector = output_vector;
   }
-  const std::vector<double> & output_vector() const { 
-    return m_output_vector; 
+  const std::vector<double> & output_vector() const {
+    return m_output_vector;
   }
   size_t GetOutputVectorSize() const {
     return m_output_vector.size();
   }
+
 protected:
+  virtual void PrintMyself(std::ostream& stream) const {
+    stream << "Input vector: [";
+    for (int i = 0; i < m_input_vector.size(); i++) {
+      if (i != 0)
+        stream << ", ";
+      stream << m_input_vector[i];
+    }
+    stream << "]";
+
+    stream << "; ";
+
+    stream << "Output vector: [";
+    for (int i = 0; i < m_output_vector.size(); i++) {
+      if (i != 0)
+        stream << ", ";
+      stream << m_output_vector[i];
+    }
+    stream << "]";
+  }
+
   std::vector<double> m_output_vector;
 };
 

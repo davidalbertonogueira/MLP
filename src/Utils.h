@@ -5,6 +5,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "Chrono.h"
 #include <stdlib.h>
 #include <math.h>
 #include <numeric>
@@ -47,7 +48,7 @@ inline double deriv_sigmoid(double x) {
   return sigmoid(x)*(1 - sigmoid(x));
 };
 
-void Softmax(std::vector<double> *output) {
+inline void Softmax(std::vector<double> *output) {
   size_t num_elements = output->size();
   std::vector<double> exp_output(num_elements);
   double exp_total = 0.0;
@@ -60,35 +61,10 @@ void Softmax(std::vector<double> *output) {
   }
 }
 
-void  GetIdMaxElement(const std::vector<double> &output, size_t * class_id) {
+inline void  GetIdMaxElement(const std::vector<double> &output, size_t * class_id) {
   *class_id = std::distance(output.begin(),
                                    std::max_element(output.begin(),
                                                     output.end()));
 }
-
-class Chronometer {
-public:
-  Chronometer() {
-    time_span = std::chrono::steady_clock::duration::zero();
-  };
-  virtual ~Chronometer() {};
-
-  void GetTime() {
-    clock_begin = std::chrono::steady_clock::now();
-  }
-  void StopTime() {
-    std::chrono::steady_clock::time_point clock_end = std::chrono::steady_clock::now();
-    time_span += clock_end - clock_begin;
-  }
-  //Return elapsed time in seconds
-  double GetElapsedTime() {
-    return double(time_span.count()) *
-      std::chrono::steady_clock::period::num / std::chrono::steady_clock::period::den;
-  }
-protected:
-  std::chrono::steady_clock::time_point clock_begin;
-  std::chrono::steady_clock::duration time_span;
-};
-
 }
 #endif // UTILS_H

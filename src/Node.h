@@ -5,6 +5,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "Utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -14,42 +16,58 @@
 #include <algorithm>
 #include <cassert> // for assert()
 
-#define ZERO_WEIGHT_INITIALIZATION 1
-#define USE_SIGMOID 1
+#define CONSTANT_WEIGHT_INITIALIZATION 0
 
 class Node {
 public:
   Node() {
-    m_bias = 0.0;
     m_num_inputs = 0;
-    m_weights.clear();
-  };
-  Node(int num_inputs) {
     m_bias = 0.0;
-    m_num_inputs = num_inputs + 1;
     m_weights.clear();
-    m_weights = std::vector<double>(m_num_inputs);
-
+  };
+  Node(int num_inputs,
+       bool use_constant_weight_init = true,
+       double constant_weight_init = 0.5) {
+    m_num_inputs = num_inputs;
+    m_bias = 0.0;
+    m_weights.clear();
     //initialize weight vector
-    std::generate_n(m_weights.begin(),
-                    m_num_inputs,
-                    (ZERO_WEIGHT_INITIALIZATION) ?
-                    utils::gen_rand(0) : utils::gen_rand());
+    WeightInitialization(m_num_inputs,
+                         use_constant_weight_init,
+                         constant_weight_init);
   };
+
   ~Node() {
+    m_num_inputs = 0;
+    m_bias = 0.0;
     m_weights.clear();
-    //m_old_weights.clear();
   };
+
+  void WeightInitialization(int m_num_inputs,
+                            bool use_constant_weight_init = true,
+                            double constant_weight_init = 0.5) {
+    //initialize weight vector
+    if (use_constant_weight_init) {
+      m_weights.resize(m_num_inputs, constant_weight_init);
+    } else {
+      m_weights.resize(m_num_inputs);
+      std::generate_n(m_weights.begin(),
+                      m_num_inputs,
+                      utils::gen_rand());
+    }
+  }
+
   int GetInputSize() const {
     return m_num_inputs;
   }
+
   void SetInputSize(int num_inputs) {
     m_num_inputs = num_inputs;
   }
+
   double GetBias() const {
     return m_bias;
   }
-
   void SetBias(double bias) {
     m_bias = bias;
   }
@@ -66,7 +84,8 @@ public:
     return m_weights.size();
   }
 
-  void GetOutput(const std::vector<double> &input, double * output) const {
+  void GetInputInnerProdWithWeights(const std::vector<double> &input,
+                                    double * output) const {
     assert(input.size() == m_weights.size());
     double inner_prod = std::inner_product(begin(input),
                                            end(input),
@@ -75,27 +94,37 @@ public:
     *output = inner_prod;
   }
 
-  void GetFilteredOutput(const std::vector<double> &input, double * bool_output) {
-    double inner_prod;
-    GetOutput(input, &inner_prod);
-#if USE_SIGMOID == 1
-    double y = utils::sigmoid(inner_prod);
-    *bool_output = (y > 0) ? true : false;
-#else
-    *bool_output = (inner_prod > 0) ? true : false;
-#endif
+  void GetOutputAfterSigmoid(const std::vector<double> &input,
+                             double * output) const {
+    double inner_prod = 0.0;
+    GetInputInnerProdWithWeights(input, &inner_prod);
+    *output = utils::sigmoid(inner_prod);
+  }
+
+  void GetBooleanOutput(const std::vector<double> &input,
+                        bool * bool_output) const {
+    double value;
+    GetOutputAfterSigmoid(input, &value);
+    *bool_output = (value > 0.5) ? true : false;
   };
 
   void UpdateWeights(const std::vector<double> &x,
-                     double m_learning_rate,
-                     double error) {
+                     double error,
+                     double learning_rate) {
     assert(x.size() == m_weights.size());
     for (size_t i = 0; i < m_weights.size(); i++)
-      m_weights[i] += x[i] * m_learning_rate *  error;
+      m_weights[i] += x[i] * learning_rate *  error;
   };
+
+  void UpdateWeight(int weight_id,
+                    double increment,
+                    double learning_rate) {
+    m_weights[weight_id] += learning_rate*increment;
+  }
+
 protected:
-  int m_num_inputs;
-  double m_bias;
+  int m_num_inputs{ 0 };
+  double m_bias{ 0.0 };
   std::vector<double> m_weights;
 };
 
