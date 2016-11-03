@@ -29,10 +29,13 @@ public:
         double constant_weight_init = 0.5) {
     m_num_nodes = num_nodes;
     m_num_inputs_per_node = num_inputs_per_node;
-    m_nodes.resize(num_nodes,
-                   std::move(Node(num_inputs_per_node,
-                                  use_constant_weight_init,
-                                  constant_weight_init)));
+    m_nodes.resize(num_nodes);                  
+
+    for (int i = 0; i < num_nodes; i++) {
+      m_nodes[i].WeightInitialization(num_inputs_per_node,
+                                      use_constant_weight_init,
+                                      constant_weight_init);
+    }
   };
   
   ~Layer() {

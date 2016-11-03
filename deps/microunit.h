@@ -59,6 +59,7 @@
 #ifndef _MICROUNIT_MICROUNIT_H_
 #define _MICROUNIT_MICROUNIT_H_
 #include <string.h>
+#include <unordered_map>
 #include <map>
 #include <string>
 #include <vector>
@@ -302,7 +303,7 @@ private:
     static UnitTester instance;
     return instance;
   }
-  std::map<std::string, UnitFunction> unitfunction_map_;
+  std::unordered_map<std::string, UnitFunction> unitfunction_map_;
 };
 }
 

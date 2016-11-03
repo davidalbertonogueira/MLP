@@ -43,9 +43,10 @@ public:
     m_weights.clear();
   };
 
-  void WeightInitialization(int m_num_inputs,
+  void WeightInitialization(int num_inputs,
                             bool use_constant_weight_init = true,
                             double constant_weight_init = 0.5) {
+    m_num_inputs = num_inputs;
     //initialize weight vector
     if (use_constant_weight_init) {
       m_weights.resize(m_num_inputs, constant_weight_init);
