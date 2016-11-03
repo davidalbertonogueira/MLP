@@ -151,8 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\deps\Chrono.h" />
+    <ClInclude Include="..\deps\easylogging++.h" />
     <ClInclude Include="..\deps\microunit.h" />
-    <ClInclude Include="..\src\Chrono.h" />
     <ClInclude Include="..\src\Layer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

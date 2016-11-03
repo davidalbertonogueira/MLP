@@ -15,8 +15,12 @@
 #include <vector>
 #include <algorithm>
 #include "microunit.h"
+#include "easylogging++.h"
 
-int main() {
+INITIALIZE_EASYLOGGINGPP
+
+int main(int argc, char* argv[]) {
+  START_EASYLOGGINGPP(argc, argv);
   microunit::UnitTester::Run();
   return 0;
 }

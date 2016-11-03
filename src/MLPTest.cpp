@@ -11,9 +11,12 @@
 #include <vector>
 #include <algorithm>
 #include "microunit.h"
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 UNIT(LearnAND) {
-  std::cout << "Train AND function with mlp." << std::endl;
+  LOG(INFO) << "Train AND function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -49,12 +52,11 @@ UNIT(LearnAND) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnNAND) {
-  std::cout << "Train NAND function with mlp." << std::endl;
+  LOG(INFO) << "Train NAND function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -90,12 +92,11 @@ UNIT(LearnNAND) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnOR) {
-  std::cout << "Train OR function with mlp." << std::endl;
+  LOG(INFO) << "Train OR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -131,12 +132,11 @@ UNIT(LearnOR) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnNOR) {
-  std::cout << "Train NOR function with mlp." << std::endl;
+  LOG(INFO) << "Train NOR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -172,12 +172,11 @@ UNIT(LearnNOR) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnXOR) {
-  std::cout << "Train XOR function with mlp." << std::endl;
+  LOG(INFO) << "Train XOR function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -211,12 +210,11 @@ UNIT(LearnXOR) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnNOT) {
-  std::cout << "Train NOT function with mlp." << std::endl;
+  LOG(INFO) << "Train NOT function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -248,12 +246,11 @@ UNIT(LearnNOT) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnX1) {
-  std::cout << "Train X1 function with mlp." << std::endl;
+  LOG(INFO) << "Train X1 function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -287,12 +284,11 @@ UNIT(LearnX1) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
 UNIT(LearnX2) {
-  std::cout << "Train X2 function with mlp." << std::endl;
+  LOG(INFO) << "Train X2 function with mlp." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -326,11 +322,11 @@ UNIT(LearnX2) {
       ASSERT_TRUE(predicted_output == correct_output);
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+  START_EASYLOGGINGPP(argc, argv);
   microunit::UnitTester::Run();
   return 0;
 }

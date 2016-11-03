@@ -13,6 +13,9 @@
 #include <vector>
 #include <algorithm>
 #include "microunit.h"
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 namespace {
 void Train(Node & node,
@@ -27,10 +30,10 @@ void Train(Node & node,
                             use_constant_weight_init,
                             constant_weight_init);
 
-  std::cout << "Starting weights:\t";
-  for (auto m_weightselement : node.GetWeights())
-    std::cout << m_weightselement << "\t";
-  std::cout << std::endl;
+  //std::cout << "Starting weights:\t";
+  //for (auto m_weightselement : node.GetWeights())
+  //  std::cout << m_weightselement << "\t";
+  //std::cout << std::endl;
 
   for (int i = 0; i < max_iterations; i++) {
     int error_count = 0;
@@ -49,15 +52,15 @@ void Train(Node & node,
     if (error_count == 0) break;
   }
 
-  std::cout << "Final weights:\t\t";
-  for (auto m_weightselement : node.GetWeights())
-    std::cout << m_weightselement << "\t";
-  std::cout << std::endl;
+  //std::cout << "Final weights:\t\t";
+  //for (auto m_weightselement : node.GetWeights())
+  //  std::cout << m_weightselement << "\t";
+  //std::cout << std::endl;
 };
 }
 
 UNIT(LearnAND) {
-  std::cout << "Train AND function with Node." << std::endl;
+  LOG(INFO) << "Train AND function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -86,12 +89,11 @@ UNIT(LearnAND) {
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 
 UNIT(LearnNAND) {
-  std::cout << "Train NAND function with Node." << std::endl;
+  LOG(INFO) << "Train NAND function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -119,12 +121,11 @@ UNIT(LearnNAND) {
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 
 UNIT(LearnOR) {
-  std::cout << "Train OR function with Node." << std::endl;
+  LOG(INFO) << "Train OR function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -152,11 +153,10 @@ UNIT(LearnOR) {
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 UNIT(LearnNOR) {
-  std::cout << "Train NOR function with Node." << std::endl;
+  LOG(INFO) << "Train NOR function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -184,12 +184,11 @@ UNIT(LearnNOR) {
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 
 UNIT(LearnNOT) {
-  std::cout << "Train NOT function with Node." << std::endl;
+  LOG(INFO) << "Train NOT function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -215,12 +214,11 @@ UNIT(LearnNOT) {
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 
 UNIT(LearnXOR) {
-  std::cout << "Train XOR function with Node." << std::endl;
+  LOG(INFO) << "Train XOR function with Node." << std::endl;
 
   std::vector<TrainingSample> training_set =
   {
@@ -247,16 +245,16 @@ UNIT(LearnXOR) {
     my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     if (class_id != correct_output) {
-      std::cout << "Failed to train. " <<
+      LOG(WARNING) << "Failed to train. " <<
         " A simple perceptron cannot learn the XOR function." << std::endl;
       FAIL();
     }
   }
-  std::cout << "Trained with success." << std::endl;
-  std::cout << std::endl;
+  LOG(INFO) << "Trained with success." << std::endl;  
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+  START_EASYLOGGINGPP(argc, argv);
   microunit::UnitTester::Run();
   return 0;
 }

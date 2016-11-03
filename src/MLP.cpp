@@ -10,6 +10,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include "easylogging++.h"
 
 bool MLP::ExportNNWeights(std::vector<double> *weights) const {
   return true;
@@ -86,29 +87,26 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
   int num_examples = training_sample_set_with_bias.size();
   int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
 
-  {
-    int layer_i = -1;
-    int node_i = -1;
-    std::cout << "Starting weights:" << std::endl;
-    for (const auto & layer : m_layers) {
-      layer_i++;
-      node_i = -1;
-      std::cout << "Layer " << layer_i << " :" << std::endl;
-      for (const auto & node : layer.GetNodes()) {
-        node_i++;
-        std::cout << "\tNode " << node_i << " :\t";
-        for (auto m_weightselement : node.GetWeights()) {
-          std::cout << m_weightselement << "\t";
-        }
-        std::cout << std::endl;
-      }
-    }
-  }
+  //{
+  //  int layer_i = -1;
+  //  int node_i = -1;
+  //  std::cout << "Starting weights:" << std::endl;
+  //  for (const auto & layer : m_layers) {
+  //    layer_i++;
+  //    node_i = -1;
+  //    std::cout << "Layer " << layer_i << " :" << std::endl;
+  //    for (const auto & node : layer.GetNodes()) {
+  //      node_i++;
+  //      std::cout << "\tNode " << node_i << " :\t";
+  //      for (auto m_weightselement : node.GetWeights()) {
+  //        std::cout << m_weightselement << "\t";
+  //      }
+  //      std::cout << std::endl;
+  //    }
+  //  }
+  //}
   size_t i = 0;
-  for ( i = 0; i < max_iterations; i++) {
-    //std::cout << "******************************" << std::endl;
-    //std::cout << "******** ITER " << i << std::endl;
-    //std::cout << "******************************" << std::endl;
+  for (i = 0; i < max_iterations; i++) {
     double current_iteration_cost_function = 0.0;
     for (auto & training_sample_with_bias : training_sample_set_with_bias) {
       std::vector<double> predicted_output;
@@ -122,16 +120,19 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
       assert(correct_output.size() == predicted_output.size());
       std::vector<double> deriv_error_output(predicted_output.size());
 
-      //std::cout << training_sample_with_bias << "\t\t";
-      //{
-      //  std::cout << "Predicted output: [";
-      //  for (int i = 0; i < predicted_output.size(); i++) {
-      //    if (i != 0)
-      //      std::cout << ", ";
-      //    std::cout << predicted_output[i];
-      //  }
-      //  std::cout << "]" << std::endl;
-      //}
+      if ((i % (max_iterations / 100)) == 0) {
+        std::stringstream temp_training;
+        temp_training << training_sample_with_bias << "\t\t";
+
+        temp_training << "Predicted output: [";
+        for (int i = 0; i < predicted_output.size(); i++) {
+          if (i != 0)
+            temp_training << ", ";
+          temp_training << predicted_output[i];
+        }
+        temp_training << "]";
+        LOG(INFO) << temp_training.str();
+      }
 
       for (int j = 0; j < predicted_output.size(); j++) {
         current_iteration_cost_function +=
@@ -145,54 +146,35 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
                     learning_rate);
     }
 
-    if((i% (max_iterations/100))==0)
-    std::cout << "Iteration "<< i << " cost function f(error): "
-      << current_iteration_cost_function << std::endl;
+    if ((i % (max_iterations / 100)) == 0)
+      LOG(INFO) << "Iteration " << i << " cost function f(error): "
+      << current_iteration_cost_function;
     if (current_iteration_cost_function < min_error_cost)
       break;
-
-    //{
-    //  int layer_i = -1;
-    //  int node_i = -1;
-    //  std::cout << "Current weights:" << std::endl;
-    //  for (const auto & layer : m_layers) {
-    //    layer_i++;
-    //    node_i = -1;
-    //    std::cout << "Layer " << layer_i << " :" << std::endl;
-    //    for (const auto & node : layer.GetNodes()) {
-    //      node_i++;
-    //      std::cout << "\tNode " << node_i << " :\t";
-    //      for (auto m_weightselement : node.GetWeights()) {
-    //        std::cout << m_weightselement << "\t";
-    //      }
-    //      std::cout << std::endl;
-    //    }
-    //  }
-    //}
   }
 
-  std::cout << "******************************" << std::endl;
-  std::cout << "******* TRAINING ENDED *******" << std::endl;
-  std::cout << "******* " << i << " iters *******" << std::endl;
-  std::cout << "******************************" << std::endl;
-  {
-    int layer_i = -1;
-    int node_i = -1;
-    std::cout << "Final weights:" << std::endl;
-    for (const auto & layer : m_layers) {
-      layer_i++;
-      node_i = -1;
-      std::cout << "Layer " << layer_i << " :" << std::endl;
-      for (const auto & node : layer.GetNodes()) {
-        node_i++;
-        std::cout << "\tNode " << node_i << " :\t";
-        for (auto m_weightselement : node.GetWeights()) {
-          std::cout << m_weightselement << "\t";
-        }
-        std::cout << std::endl;
-      }
-    }
-  }
+  LOG(INFO) << "******************************" ;
+  LOG(INFO) << "******* TRAINING ENDED *******";
+  LOG(INFO) << "******* " << i << " iters *******";
+  LOG(INFO) << "******************************";
+  //{
+  //  int layer_i = -1;
+  //  int node_i = -1;
+  //  std::cout << "Final weights:" << std::endl;
+  //  for (const auto & layer : m_layers) {
+  //    layer_i++;
+  //    node_i = -1;
+  //    std::cout << "Layer " << layer_i << " :" << std::endl;
+  //    for (const auto & node : layer.GetNodes()) {
+  //      node_i++;
+  //      std::cout << "\tNode " << node_i << " :\t";
+  //      for (auto m_weightselement : node.GetWeights()) {
+  //        std::cout << m_weightselement << "\t";
+  //      }
+  //      std::cout << std::endl;
+  //    }
+  //  }
+  //}
 };
 
 

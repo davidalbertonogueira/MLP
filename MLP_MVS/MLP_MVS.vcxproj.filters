@@ -33,7 +33,10 @@
     <ClInclude Include="..\deps\microunit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Chrono.h">
+    <ClInclude Include="..\deps\Chrono.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\deps\easylogging++.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
