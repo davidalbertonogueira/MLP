@@ -43,9 +43,11 @@ UNIT(LearnAND) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -82,9 +84,11 @@ UNIT(LearnNAND) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -121,9 +125,11 @@ UNIT(LearnOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -160,9 +166,11 @@ UNIT(LearnNOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -197,9 +205,11 @@ UNIT(LearnXOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -232,9 +242,11 @@ UNIT(LearnNOT) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
@@ -269,14 +281,15 @@ UNIT(LearnX1) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
 }
-
 
 UNIT(LearnX2) {
   std::cout << "Train X2 function with mlp." << std::endl;
@@ -307,9 +320,11 @@ UNIT(LearnX2) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    bool predicted_output = output[0] > 0.5 ? true : false;
-    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
-    ASSERT_TRUE(predicted_output == correct_output);
+    for (int i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
   }
   std::cout << "Trained with success." << std::endl;
   std::cout << std::endl;
