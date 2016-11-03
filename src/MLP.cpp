@@ -20,8 +20,7 @@ bool MLP::ImportNNWeights(const std::vector<double> & weights) {
 
 void MLP::GetOutput(const std::vector<double> &input,
                     std::vector<double> * output,
-                    std::vector<std::vector<double>> * all_layers_activations,
-                    bool apply_softmax) const {
+                    std::vector<std::vector<double>> * all_layers_activations) const {
   assert(input.size() == m_num_inputs);
   int temp_size;
   if (m_num_hidden_layers == 0)
@@ -50,7 +49,7 @@ void MLP::GetOutput(const std::vector<double> &input,
     m_layers[i].GetOutputAfterSigmoid(temp_in, &temp_out);
   }
 
-  if (apply_softmax && temp_out.size() > 1)
+  if (temp_out.size() > 1)
     utils::Softmax(&temp_out);
   *output = temp_out;
 
@@ -105,11 +104,11 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
       }
     }
   }
-
-  for (int i = 0; i < max_iterations; i++) {
-    std::cout << "******************************" << std::endl;
-    std::cout << "******** ITER " << i << std::endl;
-    std::cout << "******************************" << std::endl;
+  size_t i = 0;
+  for ( i = 0; i < max_iterations; i++) {
+    //std::cout << "******************************" << std::endl;
+    //std::cout << "******** ITER " << i << std::endl;
+    //std::cout << "******************************" << std::endl;
     double current_iteration_cost_function = 0.0;
     for (auto & training_sample_with_bias : training_sample_set_with_bias) {
       std::vector<double> predicted_output;
@@ -123,16 +122,16 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
       assert(correct_output.size() == predicted_output.size());
       std::vector<double> deriv_error_output(predicted_output.size());
 
-      std::cout << training_sample_with_bias << "\t\t";
-      {
-        std::cout << "Predicted output: [";
-        for (int i = 0; i < predicted_output.size(); i++) {
-          if (i != 0)
-            std::cout << ", ";
-          std::cout << predicted_output[i];
-        }
-        std::cout << "]" << std::endl;
-      }
+      //std::cout << training_sample_with_bias << "\t\t";
+      //{
+      //  std::cout << "Predicted output: [";
+      //  for (int i = 0; i < predicted_output.size(); i++) {
+      //    if (i != 0)
+      //      std::cout << ", ";
+      //    std::cout << predicted_output[i];
+      //  }
+      //  std::cout << "]" << std::endl;
+      //}
 
       for (int j = 0; j < predicted_output.size(); j++) {
         current_iteration_cost_function +=
@@ -146,7 +145,8 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
                     learning_rate);
     }
 
-    std::cout << "Iteration cost function f(error): "
+    if((i% (max_iterations/100))==0)
+    std::cout << "Iteration "<< i << " cost function f(error): "
       << current_iteration_cost_function << std::endl;
     if (current_iteration_cost_function < min_error_cost)
       break;
@@ -173,6 +173,7 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
 
   std::cout << "******************************" << std::endl;
   std::cout << "******* TRAINING ENDED *******" << std::endl;
+  std::cout << "******* " << i << " iters *******" << std::endl;
   std::cout << "******************************" << std::endl;
   {
     int layer_i = -1;

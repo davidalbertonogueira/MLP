@@ -34,23 +34,19 @@ public:
                                   use_constant_weight_init,
                                   constant_weight_init)));
   };
-
-
+  
   ~Layer() {
     m_num_nodes = 0;
     m_num_inputs_per_node = 0;
     m_nodes.clear();
   };
 
-  //std::vector<Node> & GetNodes() {
-  //  return m_nodes;
-  //}
-
   const std::vector<Node> & GetNodes() const {
     return m_nodes;
   }
 
-  void GetOutputAfterSigmoid(const std::vector<double> &input, std::vector<double> * output) const {
+  void GetOutputAfterSigmoid(const std::vector<double> &input, 
+                             std::vector<double> * output) const {
     assert(input.size() == m_num_inputs_per_node);
 
     output->resize(m_num_nodes);
@@ -71,7 +67,8 @@ public:
 
     for (size_t i = 0; i < m_nodes.size(); i++) {
       double net_sum;
-      m_nodes[i].GetInputInnerProdWithWeights(input_layer_activation, &net_sum);
+      m_nodes[i].GetInputInnerProdWithWeights(input_layer_activation,
+                                              &net_sum);
 
       //dE/dwij = dE/doj . doj/dnetj . dnetj/dwij
       double dE_doj = 0.0;
@@ -80,8 +77,7 @@ public:
 
       dE_doj = deriv_error[i];
       doj_dnetj = utils::deriv_sigmoid(net_sum);
-
-
+      
       for (int j = 0; j < m_num_inputs_per_node; j++) {
         (*deltas)[j] += dE_doj * doj_dnetj * m_nodes[i].GetWeights()[j];
 

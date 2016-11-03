@@ -36,7 +36,7 @@ void Train(Node & node,
     int error_count = 0;
     for (auto & training_sample_with_bias : training_sample_set_with_bias) {
       bool prediction;
-      node.GetBooleanOutput(training_sample_with_bias.input_vector(), &prediction);
+      node.GetBooleanOutput(training_sample_with_bias.input_vector(), &prediction, 0.5);
       bool correct_output = training_sample_with_bias.output_vector()[0] > 0.5 ? true : false;
       if (prediction != correct_output) {
         error_count++;
@@ -82,8 +82,8 @@ UNIT(LearnAND) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
   std::cout << "Trained with success." << std::endl;
@@ -115,8 +115,8 @@ UNIT(LearnNAND) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
   std::cout << "Trained with success." << std::endl;
@@ -148,8 +148,8 @@ UNIT(LearnOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
   std::cout << "Trained with success." << std::endl;
@@ -180,8 +180,8 @@ UNIT(LearnNOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
   std::cout << "Trained with success." << std::endl;
@@ -211,8 +211,8 @@ UNIT(LearnNOT) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
   std::cout << "Trained with success." << std::endl;
@@ -244,8 +244,8 @@ UNIT(LearnXOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id);
-    bool correct_output = training_sample.output_vector()[0] > 0 ? true : false;
+    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     if (class_id != correct_output) {
       std::cout << "Failed to train. " <<
         " A simple perceptron cannot learn the XOR function." << std::endl;

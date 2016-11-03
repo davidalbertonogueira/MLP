@@ -52,7 +52,7 @@ public:
     } else {
       m_weights.resize(m_num_inputs);
       std::generate_n(m_weights.begin(),
-                      m_num_inputs,
+                     m_num_inputs,
                       utils::gen_rand());
     }
   }
@@ -102,10 +102,11 @@ public:
   }
 
   void GetBooleanOutput(const std::vector<double> &input,
-                        bool * bool_output) const {
+                        bool * bool_output,
+                        double threshold = 0.5) const {
     double value;
     GetOutputAfterSigmoid(input, &value);
-    *bool_output = (value > 0.5) ? true : false;
+    *bool_output = (value >threshold) ? true : false;
   };
 
   void UpdateWeights(const std::vector<double> &x,

@@ -48,8 +48,7 @@ public:
 
   void GetOutput(const std::vector<double> &input,
                  std::vector<double> * output,
-                 std::vector<std::vector<double>> * all_layers_activations = nullptr,
-                 bool apply_softmax = false) const;
+                 std::vector<std::vector<double>> * all_layers_activations = nullptr) const;
   void GetOutputClass(const std::vector<double> &output, size_t * class_id) const;
 
   void UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set_with_bias,
