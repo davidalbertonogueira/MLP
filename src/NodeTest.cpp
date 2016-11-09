@@ -39,7 +39,10 @@ void Train(Node & node,
     int error_count = 0;
     for (auto & training_sample_with_bias : training_sample_set_with_bias) {
       bool prediction;
-      node.GetBooleanOutput(training_sample_with_bias.input_vector(), &prediction, 0.5);
+      node.GetBooleanOutput(training_sample_with_bias.input_vector(),
+                            utils::linear,
+                            &prediction, 
+                            0.5);
       bool correct_output = training_sample_with_bias.output_vector()[0] > 0.5 ? true : false;
       if (prediction != correct_output) {
         error_count++;
@@ -85,7 +88,10 @@ UNIT(LearnAND) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id, 
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
@@ -117,7 +123,10 @@ UNIT(LearnNAND) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id,
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
@@ -149,7 +158,10 @@ UNIT(LearnOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id,
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
@@ -180,7 +192,10 @@ UNIT(LearnNOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id,
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
@@ -210,7 +225,10 @@ UNIT(LearnNOT) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id,
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     ASSERT_TRUE(class_id == correct_output);
   }
@@ -242,7 +260,10 @@ UNIT(LearnXOR) {
 
   for (const auto & training_sample : training_sample_set_with_bias) {
     bool class_id;
-    my_node.GetBooleanOutput(training_sample.input_vector(), &class_id, 0.5);
+    my_node.GetBooleanOutput(training_sample.input_vector(),
+                             utils::linear,
+                             &class_id,
+                             0.5);
     bool correct_output = training_sample.output_vector()[0] > 0.5 ? true : false;
     if (class_id != correct_output) {
       LOG(WARNING) << "Failed to train. " <<

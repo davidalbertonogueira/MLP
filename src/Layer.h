@@ -5,6 +5,7 @@
 #ifndef LAYER_H
 #define LAYER_H
 
+#include "Utils.h"
 #include "Node.h"
 
 #include <stdio.h>
@@ -23,39 +24,59 @@ public:
     m_nodes.clear();
   };
 
-  Layer(int num_nodes,
-        int num_inputs_per_node,
+  Layer(int num_inputs_per_node,
+        int num_nodes,
+        const std::string & activation_function,
         bool use_constant_weight_init = true,
         double constant_weight_init = 0.5) {
-    m_num_nodes = num_nodes;
     m_num_inputs_per_node = num_inputs_per_node;
-    m_nodes.resize(num_nodes);                  
+    m_num_nodes = num_nodes;
+    m_nodes.resize(num_nodes);
 
     for (int i = 0; i < num_nodes; i++) {
       m_nodes[i].WeightInitialization(num_inputs_per_node,
                                       use_constant_weight_init,
                                       constant_weight_init);
     }
+
+    std::pair<std::function<double(double)>,
+      std::function<double(double)> > *pair;
+    bool ret_val = utils::ActivationFunctionsManager::Singleton().
+           GetActivationFunctionPair(activation_function,
+                                     &pair);
+    assert(ret_val);
+    m_activation_function = (*pair).first;
+    m_deriv_activation_function = (*pair).second;
+  };
+
+  ~Layer() {
+    m_num_inputs_per_node = 0;
+    m_num_nodes = 0;
+    m_nodes.clear();
+  };
+
+  int GetInputSize() const {
+    return m_num_inputs_per_node;
   };
   
-  ~Layer() {
-    m_num_nodes = 0;
-    m_num_inputs_per_node = 0;
-    m_nodes.clear();
+  int GetOutputSize() const {
+    return m_num_nodes;
   };
 
   const std::vector<Node> & GetNodes() const {
     return m_nodes;
   }
 
-  void GetOutputAfterSigmoid(const std::vector<double> &input, 
-                             std::vector<double> * output) const {
+  void GetOutputAfterActivationFunction(const std::vector<double> &input,
+                                        std::vector<double> * output) const {
     assert(input.size() == m_num_inputs_per_node);
 
     output->resize(m_num_nodes);
 
     for (int i = 0; i < m_num_nodes; ++i) {
-      m_nodes[i].GetOutputAfterSigmoid(input, &((*output)[i]));
+      m_nodes[i].GetOutputAfterActivationFunction(input,
+                                                  m_activation_function,
+                                                  &((*output)[i]));
     }
   }
 
@@ -79,8 +100,8 @@ public:
       double dnetj_dwij = 0.0;
 
       dE_doj = deriv_error[i];
-      doj_dnetj = utils::deriv_sigmoid(net_sum);
-      
+      doj_dnetj = m_deriv_activation_function(net_sum);
+
       for (int j = 0; j < m_num_inputs_per_node; j++) {
         (*deltas)[j] += dE_doj * doj_dnetj * m_nodes[i].GetWeights()[j];
 
@@ -94,9 +115,12 @@ public:
   };
 
 protected:
-  int m_num_nodes{ 0 };
   int m_num_inputs_per_node{ 0 };
+  int m_num_nodes{ 0 };
   std::vector<Node> m_nodes;
+
+  std::function<double(double)>  m_activation_function;
+  std::function<double(double)>  m_deriv_activation_function;
 };
 
 #endif //LAYER_H

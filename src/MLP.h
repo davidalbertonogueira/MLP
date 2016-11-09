@@ -19,27 +19,26 @@
 
 class MLP {
 public:
-  MLP(int num_inputs,
-      int num_outputs,
-      int num_hidden_layers,
-      int num_nodes_per_hidden_layer,
+  //desired call sintax :  MLP({64*64,20,4}, {"sigmoid", "linear"},
+  MLP(const std::vector<uint64_t> & layers_nodes,
+      const std::vector<std::string> & layers_activfuncs,
       bool use_constant_weight_init = true,
       double constant_weight_init = 0.5) {
+    assert(layers_nodes.size() >= 2);
+    assert(layers_activfuncs.size() + 1 == layers_nodes.size());
 
-    m_num_inputs = num_inputs;
-    m_num_outputs = num_outputs;
-    m_num_hidden_layers = num_hidden_layers;
-    m_num_nodes_per_hidden_layer = num_nodes_per_hidden_layer;
-
-    CreateMLP(use_constant_weight_init,
+    CreateMLP(layers_nodes,
+              layers_activfuncs,
+              use_constant_weight_init,
               constant_weight_init);
   }
+
 
   ~MLP() {
     m_num_inputs = 0;
     m_num_outputs = 0;
     m_num_hidden_layers = 0;
-    m_num_nodes_per_hidden_layer = 0;
+    m_layers_nodes.clear();
     m_layers.clear();
   };
 
@@ -60,40 +59,27 @@ protected:
                      const std::vector<double> &error,
                      double learning_rate);
 private:
-  void CreateMLP(bool use_constant_weight_init,
+  void CreateMLP(const std::vector<uint64_t> & layers_nodes,
+                 const std::vector<std::string> & layers_activfuncs,
+                 bool use_constant_weight_init,
                  double constant_weight_init = 0.5) {
-    if (m_num_hidden_layers > 0) {
-      //first layer
-      m_layers.emplace_back(Layer(m_num_nodes_per_hidden_layer,
-                                  m_num_inputs,
-                                  use_constant_weight_init,
-                                  constant_weight_init));
-      //subsequent layers
-      for (int i = 0; i < m_num_hidden_layers - 1; i++) {
-        m_layers.emplace_back(Layer(m_num_nodes_per_hidden_layer,
-                                    m_num_nodes_per_hidden_layer,
-                                    use_constant_weight_init,
-                                    constant_weight_init));
-      }
-      //last layer
-      m_layers.emplace_back(Layer(m_num_outputs,
-                                  m_num_nodes_per_hidden_layer,
-                                  use_constant_weight_init,
-                                  constant_weight_init));
-    } else {
-      m_layers.emplace_back(Layer(m_num_outputs,
-                                  m_num_inputs,
+    m_layers_nodes = layers_nodes;
+    m_num_inputs = m_layers_nodes[0];
+    m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
+    m_num_hidden_layers = m_layers_nodes.size() - 2;
+
+    for (int i = 0; i < m_layers_nodes.size() - 1; i++) {
+      m_layers.emplace_back(Layer(m_layers_nodes[i],
+                                  m_layers_nodes[i + 1],
+                                  layers_activfuncs[i],
                                   use_constant_weight_init,
                                   constant_weight_init));
     }
   }
-
-
   int m_num_inputs{ 0 };
   int m_num_outputs{ 0 };
   int m_num_hidden_layers{ 0 };
-  int m_num_nodes_per_hidden_layer{ 0 };
-
+  std::vector<uint64_t> m_layers_nodes;
   std::vector<Layer> m_layers;
 };
 

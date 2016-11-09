@@ -95,18 +95,20 @@ public:
     *output = inner_prod;
   }
 
-  void GetOutputAfterSigmoid(const std::vector<double> &input,
+  void GetOutputAfterActivationFunction(const std::vector<double> &input,
+                                        std::function<double(double)> activation_function,
                              double * output) const {
     double inner_prod = 0.0;
     GetInputInnerProdWithWeights(input, &inner_prod);
-    *output = utils::sigmoid(inner_prod);
+    *output = activation_function(inner_prod);
   }
 
   void GetBooleanOutput(const std::vector<double> &input,
+                        std::function<double(double)> activation_function,
                         bool * bool_output,
                         double threshold = 0.5) const {
     double value;
-    GetOutputAfterSigmoid(input, &value);
+    GetOutputAfterActivationFunction(input, activation_function, &value);
     *bool_output = (value >threshold) ? true : false;
   };
 
