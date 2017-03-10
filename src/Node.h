@@ -53,7 +53,7 @@ public:
     } else {
       m_weights.resize(m_num_inputs);
       std::generate_n(m_weights.begin(),
-                     m_num_inputs,
+                      m_num_inputs,
                       utils::gen_rand());
     }
   }
@@ -97,7 +97,7 @@ public:
 
   void GetOutputAfterActivationFunction(const std::vector<double> &input,
                                         std::function<double(double)> activation_function,
-                             double * output) const {
+                                        double * output) const {
     double inner_prod = 0.0;
     GetInputInnerProdWithWeights(input, &inner_prod);
     *output = activation_function(inner_prod);
@@ -109,7 +109,7 @@ public:
                         double threshold = 0.5) const {
     double value;
     GetOutputAfterActivationFunction(input, activation_function, &value);
-    *bool_output = (value >threshold) ? true : false;
+    *bool_output = (value > threshold) ? true : false;
   };
 
   void UpdateWeights(const std::vector<double> &x,
@@ -125,6 +125,20 @@ public:
                     double learning_rate) {
     m_weights[weight_id] += learning_rate*increment;
   }
+
+  void SaveNode(FILE * file) const {
+    fwrite(&m_num_inputs, sizeof(m_num_inputs), 1, file);
+    fwrite(&m_bias, sizeof(m_bias), 1, file);
+    fwrite(&m_weights[0], sizeof(m_weights[0]), m_weights.size(), file);
+  };
+  void LoadNode(FILE * file) {
+    m_weights.clear();
+
+    fread(&m_num_inputs, sizeof(m_num_inputs), 1, file);
+    fread(&m_bias, sizeof(m_bias), 1, file);
+    m_weights.resize(m_num_inputs);
+    fread(&m_weights[0], sizeof(m_weights[0]), m_weights.size(), file);
+  };
 
 protected:
   int m_num_inputs{ 0 };

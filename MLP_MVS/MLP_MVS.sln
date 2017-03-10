@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPTest", "MLPTest\MLPTest.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayerTest", "LayerTest\LayerTest.vcxproj", "{10A8D77B-A596-4B06-87DA-B28492D77905}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IrisDatasetTest", "IrisDatasetTest\IrisDatasetTest.vcxproj", "{D58D3DD3-DF71-479D-A8EF-C52308C34C11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{10A8D77B-A596-4B06-87DA-B28492D77905}.Release|x64.Build.0 = Release|x64
 		{10A8D77B-A596-4B06-87DA-B28492D77905}.Release|x86.ActiveCfg = Release|Win32
 		{10A8D77B-A596-4B06-87DA-B28492D77905}.Release|x86.Build.0 = Release|Win32
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Debug|x64.ActiveCfg = Debug|x64
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Debug|x64.Build.0 = Debug|x64
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Debug|x86.ActiveCfg = Debug|Win32
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Debug|x86.Build.0 = Debug|Win32
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Release|x64.ActiveCfg = Release|x64
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Release|x64.Build.0 = Release|x64
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Release|x86.ActiveCfg = Release|Win32
+		{D58D3DD3-DF71-479D-A8EF-C52308C34C11}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

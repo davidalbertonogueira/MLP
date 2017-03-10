@@ -39,7 +39,7 @@ UNIT(LearnAND) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -79,7 +79,7 @@ UNIT(LearnNAND) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -119,7 +119,7 @@ UNIT(LearnOR) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -159,7 +159,7 @@ UNIT(LearnNOR) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -197,7 +197,7 @@ UNIT(LearnXOR) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -233,7 +233,7 @@ UNIT(LearnNOT) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -271,7 +271,7 @@ UNIT(LearnX1) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 
@@ -309,7 +309,7 @@ UNIT(LearnX2) {
   size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
-  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" }, false);
+  MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
   //Train MLP
   my_mlp.UpdateMiniBatch(training_sample_set_with_bias, 0.5, 500, 0.25);
 

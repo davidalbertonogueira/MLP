@@ -12,11 +12,82 @@
 #include <algorithm>
 #include "easylogging++.h"
 
-bool MLP::ExportNNWeights(std::vector<double> *weights) const {
-  return true;
+
+
+//desired call sintax :  MLP({64*64,20,4}, {"sigmoid", "linear"},
+MLP::MLP(const std::vector<uint64_t> & layers_nodes,
+         const std::vector<std::string> & layers_activfuncs,
+         bool use_constant_weight_init,
+         double constant_weight_init) {
+  assert(layers_nodes.size() >= 2);
+  assert(layers_activfuncs.size() + 1 == layers_nodes.size());
+
+  CreateMLP(layers_nodes,
+            layers_activfuncs,
+            use_constant_weight_init,
+            constant_weight_init);
 };
-bool MLP::ImportNNWeights(const std::vector<double> & weights) {
-  return true;
+
+MLP::MLP(std::string & filename) {
+  LoadMLPNetwork(filename);
+}
+
+MLP::~MLP() {
+  m_num_inputs = 0;
+  m_num_outputs = 0;
+  m_num_hidden_layers = 0;
+  m_layers_nodes.clear();
+  m_layers.clear();
+};
+
+void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
+                    const std::vector<std::string> & layers_activfuncs,
+                    bool use_constant_weight_init,
+                    double constant_weight_init) {
+  m_layers_nodes = layers_nodes;
+  m_num_inputs = m_layers_nodes[0];
+  m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
+  m_num_hidden_layers = m_layers_nodes.size() - 2;
+
+  for (int i = 0; i < m_layers_nodes.size() - 1; i++) {
+    m_layers.emplace_back(Layer(m_layers_nodes[i],
+                                m_layers_nodes[i + 1],
+                                layers_activfuncs[i],
+                                use_constant_weight_init,
+                                constant_weight_init));
+  }
+};
+
+void MLP::SaveMLPNetwork(std::string & filename)const {
+  FILE * file;
+  file = fopen(filename.c_str(), "wb");
+  fwrite(&m_num_inputs, sizeof(m_num_inputs), 1, file);
+  fwrite(&m_num_outputs, sizeof(m_num_outputs), 1, file);
+  fwrite(&m_num_hidden_layers, sizeof(m_num_hidden_layers), 1, file);
+  if (!m_layers_nodes.empty())
+    fwrite(&m_layers_nodes[0], sizeof(m_layers_nodes[0]), m_layers_nodes.size(), file);
+  for (int i = 0; i < m_layers.size(); i++) {
+    m_layers[i].SaveLayer(file);
+  }
+  fclose(file);
+};
+void MLP::LoadMLPNetwork(std::string & filename) {
+  m_layers_nodes.clear();
+  m_layers.clear();
+
+  FILE * file;
+  file = fopen(filename.c_str(), "rb");
+  fread(&m_num_inputs, sizeof(m_num_inputs), 1, file);
+  fread(&m_num_outputs, sizeof(m_num_outputs), 1, file);
+  fread(&m_num_hidden_layers, sizeof(m_num_hidden_layers), 1, file);
+  m_layers_nodes.resize(m_num_hidden_layers + 2);
+  if (!m_layers_nodes.empty())
+    fread(&m_layers_nodes[0], sizeof(m_layers_nodes[0]), m_layers_nodes.size(), file);
+  m_layers.resize(m_layers_nodes.size() - 1);
+  for (int i = 0; i < m_layers.size(); i++) {
+    m_layers[i].LoadLayer(file);
+  }
+  fclose(file);
 };
 
 void MLP::GetOutput(const std::vector<double> &input,
@@ -80,7 +151,8 @@ void MLP::UpdateWeights(const std::vector<std::vector<double>> & all_layers_acti
 void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set_with_bias,
                           double learning_rate,
                           int max_iterations,
-                          double min_error_cost) {
+                          double min_error_cost,
+                          bool output_log) {
   int num_examples = training_sample_set_with_bias.size();
   int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
 
@@ -102,23 +174,28 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
   //    }
   //  }
   //}
+
   size_t i = 0;
   double current_iteration_cost_function = 0.0;
+
   for (i = 0; i < max_iterations; i++) {
     current_iteration_cost_function = 0.0;
     for (auto & training_sample_with_bias : training_sample_set_with_bias) {
+
       std::vector<double> predicted_output;
       std::vector< std::vector<double> > all_layers_activations;
+
       GetOutput(training_sample_with_bias.input_vector(),
                 &predicted_output,
                 &all_layers_activations);
+
       const std::vector<double> &  correct_output =
         training_sample_with_bias.output_vector();
 
       assert(correct_output.size() == predicted_output.size());
       std::vector<double> deriv_error_output(predicted_output.size());
 
-      if ((i % (max_iterations / 100)) == 0) {
+      if (output_log && ((i % (max_iterations / 10)) == 0)) {
         std::stringstream temp_training;
         temp_training << training_sample_with_bias << "\t\t";
 
@@ -144,7 +221,7 @@ void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set
                     learning_rate);
     }
 
-    if ((i % (max_iterations / 100)) == 0)
+    if (output_log && ((i % (max_iterations / 10)) == 0))
       LOG(INFO) << "Iteration " << i << " cost function f(error): "
       << current_iteration_cost_function;
     if (current_iteration_cost_function < min_error_cost)

@@ -42,11 +42,12 @@ public:
     std::pair<std::function<double(double)>,
       std::function<double(double)> > *pair;
     bool ret_val = utils::ActivationFunctionsManager::Singleton().
-           GetActivationFunctionPair(activation_function,
-                                     &pair);
+      GetActivationFunctionPair(activation_function,
+                                &pair);
     assert(ret_val);
     m_activation_function = (*pair).first;
     m_deriv_activation_function = (*pair).second;
+    m_activation_function_str = activation_function;
   };
 
   ~Layer() {
@@ -58,7 +59,7 @@ public:
   int GetInputSize() const {
     return m_num_inputs_per_node;
   };
-  
+
   int GetOutputSize() const {
     return m_num_nodes;
   };
@@ -114,11 +115,52 @@ public:
     }
   };
 
+
+  void SaveLayer(FILE * file) const {
+    fwrite(&m_num_nodes, sizeof(m_num_nodes), 1, file);
+    fwrite(&m_num_inputs_per_node, sizeof(m_num_inputs_per_node), 1, file);
+
+    size_t str_size = m_activation_function_str.size();
+    fwrite(&str_size, sizeof(size_t), 1, file);
+    fwrite(m_activation_function_str.c_str(), sizeof(char), str_size, file);
+
+    for (int i = 0; i < m_nodes.size(); i++) {
+      m_nodes[i].SaveNode(file);
+    }
+  };
+  void LoadLayer(FILE * file) {
+    m_nodes.clear();
+
+    fread(&m_num_nodes, sizeof(m_num_nodes), 1, file);
+    fread(&m_num_inputs_per_node, sizeof(m_num_inputs_per_node), 1, file);
+
+    size_t str_size = 0;
+    fread(&str_size, sizeof(size_t), 1, file);
+    m_activation_function_str.resize(str_size);
+    fread(&(m_activation_function_str[0]), sizeof(char), str_size, file);
+
+    std::pair<std::function<double(double)>,
+      std::function<double(double)> > *pair;
+    bool ret_val = utils::ActivationFunctionsManager::Singleton().
+      GetActivationFunctionPair(m_activation_function_str,
+                                &pair);
+    assert(ret_val);
+    m_activation_function = (*pair).first;
+    m_deriv_activation_function = (*pair).second;
+    
+    m_nodes.resize(m_num_nodes);
+    for (int i = 0; i < m_nodes.size(); i++) {
+      m_nodes[i].LoadNode(file);
+    }
+
+  };
+
 protected:
   int m_num_inputs_per_node{ 0 };
   int m_num_nodes{ 0 };
   std::vector<Node> m_nodes;
 
+  std::string m_activation_function_str;
   std::function<double(double)>  m_activation_function;
   std::function<double(double)>  m_deriv_activation_function;
 };
