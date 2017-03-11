@@ -35,7 +35,7 @@ public:
                  std::vector<std::vector<double>> * all_layers_activations = nullptr) const;
   void GetOutputClass(const std::vector<double> &output, size_t * class_id) const;
 
-  void UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set_with_bias,
+  void Train(const std::vector<TrainingSample> &training_sample_set_with_bias,
                        double learning_rate,
                        int max_iterations = 5000,
                        double min_error_cost = 0.001,

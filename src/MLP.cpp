@@ -148,7 +148,7 @@ void MLP::UpdateWeights(const std::vector<std::vector<double>> & all_layers_acti
   }
 };
 
-void MLP::UpdateMiniBatch(const std::vector<TrainingSample> &training_sample_set_with_bias,
+void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias,
                           double learning_rate,
                           int max_iterations,
                           double min_error_cost,

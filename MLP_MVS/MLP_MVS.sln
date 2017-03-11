@@ -13,6 +13,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayerTest", "LayerTest\Laye
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IrisDatasetTest", "IrisDatasetTest\IrisDatasetTest.vcxproj", "{D58D3DD3-DF71-479D-A8EF-C52308C34C11}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0D44BA4E-E6F3-41E0-811E-5D832620728E}"
+	ProjectSection(SolutionItems) = preProject
+		..\logo.png = ..\logo.png
+		..\Makefile = ..\Makefile
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

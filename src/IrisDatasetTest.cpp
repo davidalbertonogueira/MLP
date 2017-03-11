@@ -115,19 +115,16 @@ int main(int argc, char *argv[]) {
   }
 
   {
-    /* 4 inputs + 1 bias.
-    * 1 hidden layer(s) of 4 neurons.
-    * 3 outputs (1 per iris_class)
-    */
+    // 4 inputs + 1 bias.
+    // 1 hidden layer(s) of 4 neurons.
+    // 3 outputs (1 per iris_class)
     MLP my_mlp({ 4 + 1, 4 ,3 }, { "sigmoid", "linear" }, false);
-
 
     int loops = 5000;
 
-
     // Train the network with backpropagation.
     LOG(INFO) << "Training for " << loops << " loops over data.";
-    my_mlp.UpdateMiniBatch(training_sample_set_with_bias, .01, loops, 0.10, false);
+    my_mlp.Train(training_sample_set_with_bias, .01, loops, 0.10, false);
 
     my_mlp.SaveMLPNetwork(std::string("../../data/iris.mlp"));
   }

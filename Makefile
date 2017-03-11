@@ -29,7 +29,7 @@ OBJS = $(SRCS:.cpp=.o)
 TXTS = $(wildcard *.txt)
 SCRIPTS = $(wildcard *.sh)
 
-all : MLPTest LayerTest NodeTest $(PROJNAME).a $(PROJNAME).so
+all : IrisDatasetTest MLPTest LayerTest NodeTest $(PROJNAME).a $(PROJNAME).so
 
 $(PROJNAME).a : $(SOURCEPATH)/MLP.o
 	@echo Creating static lib $@
@@ -41,6 +41,10 @@ $(PROJNAME).so : $(SOURCEPATH)/MLP.o
 
 %.o: %.cpp $(HDRS)
 	$(CC) -c $(CFLAGS) $(LFLAGS) -o $@ $<
+
+IrisDatasetTest: $(SOURCEPATH)/IrisDatasetTest.o  $(SOURCEPATH)/MLP.o
+	@echo Compiling program $@
+	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 
 MLPTest: $(SOURCEPATH)/MLPTest.o  $(SOURCEPATH)/MLP.o
 	@echo Compiling program $@
@@ -60,5 +64,5 @@ clean:
 
 cleanall:
 	@echo Clean All
-	rm -f *~ $(SOURCEPATH)/*.o *~ $(PROJNAME).a $(PROJNAME).so MLPTest LayerTest NodeTest
+	rm -f *~ $(SOURCEPATH)/*.o *~ $(PROJNAME).a $(PROJNAME).so IrisDatasetTest MLPTest LayerTest NodeTest
 	@echo Success
