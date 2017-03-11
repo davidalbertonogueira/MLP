@@ -30,7 +30,7 @@ Some example programs are included with the source code.
 
 - [`IrisDatasetTest.cpp`](./src/IrisDatasetTest.cpp) - Using the [IRIS data-set](https://archive.ics.uci.edu/ml/datasets/Iris) trains a MLP using backpropagation and tries to predict the classes.
 - [`MLPTest.cpp`](./src/MLPTest.cpp) - Includes tests to train a MLP for AND, NAND, NOR, OR, NOT and XOR using backpropagation.
-- [`Node.cpp`](./src/Node.cpp) - Includes tests to train a single node (aka, perceptron) for AND, NAND, NOR, OR, NOT and XOR using backpropagation. (*A simple perceptron cannot learn the XOR function.*)
+- [`NodeTest.cpp`](./src/NodeTest.cpp) - Includes tests to train a single node (aka, perceptron) for AND, NAND, NOR, OR, NOT and XOR using backpropagation. (*A simple perceptron cannot learn the XOR function.*)
 
 ## Example
 
