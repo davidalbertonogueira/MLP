@@ -1,6 +1,6 @@
 /**
 * @file microunit.h
-* @version 0.1
+* @version 0.2
 * @author Sebastiao Salvador de Miranda (ssm)
 * @brief Tiny library for cpp unit testing. Should work on any c++11 compiler.
 *
@@ -25,7 +25,7 @@
 *  }
 * @endcode
 *
-* @copyright Copyright (c) 2016, Sebastiao Salvador de Miranda.
+* @copyright Copyright (c) 2016-2017, Sebastiao Salvador de Miranda.
 *            All rights reserved. See licence below.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -82,99 +82,99 @@ strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
 
 namespace microunit {
-const static int COLORCODE_GREY{ 7 };
-const static int COLORCODE_GREEN{ 10 };
-const static int COLORCODE_RED{ 12 };
-const static int COLORCODE_YELLOW{ 14 };
+  const static int COLORCODE_GREY{ 7 };
+  const static int COLORCODE_GREEN{ 10 };
+  const static int COLORCODE_RED{ 12 };
+  const static int COLORCODE_YELLOW{ 14 };
 
-/**
-* @brief Helper class to convert from color codes to ansi escape codes
-*        Used to print color in non-win32 systems.
-*/
-std::string ColorCodeToANSI(const int color_code) {
-  switch (color_code) {
-  case COLORCODE_GREY: return "\033[22;37m";
-  case COLORCODE_GREEN: return "\033[01;31m";
-  case COLORCODE_RED: return "\033[01;32m";
-  case COLORCODE_YELLOW: return "\033[01;33m";
-  default: return "";
+  /**
+  * @brief Helper class to convert from color codes to ansi escape codes
+  *        Used to print color in non-win32 systems.
+  */
+  std::string ColorCodeToANSI(const int color_code) {
+    switch (color_code) {
+    case COLORCODE_GREY: return "\033[22;37m";
+    case COLORCODE_GREEN: return "\033[01;32m";
+    case COLORCODE_RED: return "\033[01;31m";
+    case COLORCODE_YELLOW: return "\033[01;33m";
+    default: return "";
+    }
   }
-}
 
-/**
-* @brief Helper function to change the current terminal color.
-* @param [in] color_code Input color code.
-*/
-void SetTerminalColor(int color_code) {
+  /**
+  * @brief Helper function to change the current terminal color.
+  * @param [in] color_code Input color code.
+  */
+  void SetTerminalColor(int color_code) {
 #if defined(_WIN32)
-  HANDLE handler = GetStdHandle(STD_OUTPUT_HANDLE);
-  CONSOLE_SCREEN_BUFFER_INFO buffer_info;
-  GetConsoleScreenBufferInfo(handler, &buffer_info);
-  SetConsoleTextAttribute(handler, ((buffer_info.wAttributes & 0xFFF0) |
-    (WORD)color_code));
+    HANDLE handler = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+    GetConsoleScreenBufferInfo(handler, &buffer_info);
+    SetConsoleTextAttribute(handler, ((buffer_info.wAttributes & 0xFFF0) |
+      (WORD)color_code));
 #else
-  std::cout << ColorCodeToANSI(color_code);
+    std::cout << ColorCodeToANSI(color_code);
 #endif
-}
-
-/**
-* @brief Helper class to be used as a iostream manipulator and change the
-*        terminal color.
-*/
-class Color {
-public:
-  Color(int code) : code_(code) {}
-  void Set() const {
-    SetTerminalColor(code_);
   }
-  int code() const { return code_; }
-private:
-  int code_;
-};
 
-const static Color Grey{ COLORCODE_GREY };
-const static Color Green{ COLORCODE_GREEN };
-const static Color Red{ COLORCODE_RED };
-const static Color Yellow{ COLORCODE_YELLOW };
-
-/**
-* @brief Helper class to be used in a cout streaming statement. Resets to
-*        the default terminal color upon statement completion.
-*/
-class SaveColor {
-public:
-  ~SaveColor() {
-    SetTerminalColor(Grey.code());
+  /**
+  * @brief Helper class to be used as a iostream manipulator and change the
+  *        terminal color.
+  */
+  class Color {
+  public:
+    Color(int code) : code_(code) {}
+    void Set() const {
+      SetTerminalColor(code_);
+    }
+    int code() const { return code_; }
+  private:
+    int code_;
   };
-};
 
-/**
-* @brief Helper class to be used in a cout streaming statement. Puts a line
-*        break upon statement completion.
-*/
-class EndingLineBreak {
-public:
-  ~EndingLineBreak() {
-    std::cout << std::endl;
+  const static Color Grey{ COLORCODE_GREY };
+  const static Color Green{ COLORCODE_GREEN };
+  const static Color Red{ COLORCODE_RED };
+  const static Color Yellow{ COLORCODE_YELLOW };
+
+  /**
+  * @brief Helper class to be used in a cout streaming statement. Resets to
+  *        the default terminal color upon statement completion.
+  */
+  class SaveColor {
+  public:
+    ~SaveColor() {
+      SetTerminalColor(Grey.code());
+    };
   };
-};
+
+  /**
+  * @brief Helper class to be used in a cout streaming statement. Puts a line
+  *        break upon statement completion.
+  */
+  class EndingLineBreak {
+  public:
+    ~EndingLineBreak() {
+      std::cout << std::endl;
+    };
+  };
 }
 
 /** @brief Operator to allow using SaveColor class with an ostream */
 inline std::ostream& operator<<(std::ostream& os,
-                                const microunit::SaveColor& obj) {
+  const microunit::SaveColor& obj) {
   return os;
 }
 
 /** @brief Operator to allow using EndingLineBreak class with an ostream */
 inline std::ostream& operator<<(std::ostream& os,
-                                const microunit::EndingLineBreak& obj) {
+  const microunit::EndingLineBreak& obj) {
   return os;
 }
 
 /** @brief Operator to allow using Color class with an ostream */
 inline std::ostream& operator<<(std::ostream& os,
-                                const microunit::Color& color) {
+  const microunit::Color& color) {
   color.Set();
   return os;
 }
@@ -201,118 +201,124 @@ microunit::EndingLineBreak{} << microunit::Green << "[    ] "
 #define LOG_GOOD TERMINAL_GOOD << __FILENAME__ << ":" << __LINE__ << ": "
 
 namespace microunit {
-/**
-* @brief Result of a unit test.
-*/
-struct UnitFunctionResult {
-  bool success{ true };
-};
-
-/**
-* @brief Unit test function type.
-*/
-typedef void(*UnitFunction)(UnitFunctionResult*);
-
-/**
-* @brief Main class for unit test management. This class is a singleton
-*        and maintains a list of all registered unit test cases.
-*/
-class UnitTester {
-public:
   /**
-  * @brief Run all the registered unit test cases.
-  * @returns True if all tests pass, false otherwise.
+  * @brief Result of a unit test.
   */
-  static bool Run() {
-    std::vector<std::string> failures, sucesses;
-
-    // Iterate all registered unit tests
-    for (auto& unit : Instance().unitfunction_map_) {
-      std::cout << MICROUNIT_SEPARATOR << std::endl;
-      TERMINAL_GOOD << "Test case '" << unit.first << "'";
-
-      // Run the unit test
-      UnitFunctionResult result;
-      unit.second(&result);
-
-      if (!result.success) {
-        TERMINAL_BAD << "Failed test";
-        failures.push_back(unit.first);
-      } else {
-        TERMINAL_GOOD << "Passed test";
-        sucesses.push_back(unit.first);
-      }
-    }
-    std::cout
-      << MICROUNIT_SEPARATOR << std::endl
-      << MICROUNIT_SEPARATOR << std::endl;
-
-    TERMINAL_GOOD << "Passed " << sucesses.size()
-      << " test cases:";
-    for (const auto& success_t : sucesses) {
-      TERMINAL_GOOD << success_t;
-    }
-    std::cout << MICROUNIT_SEPARATOR << std::endl;
-
-    // Output result summary
-    if (failures.empty()) {
-      TERMINAL_GOOD << "All tests passed";
-      std::cout << MICROUNIT_SEPARATOR << std::endl;
-      return true;
-    } else {
-      TERMINAL_BAD << "Failed " << failures.size()
-        << " test cases:";
-      for (const auto& failure : failures) {
-        TERMINAL_BAD << failure;
-      }
-      std::cout << MICROUNIT_SEPARATOR << std::endl;
-      return false;
-    }
-  }
-
-  /**
-  * @brief Register a unit test case function. In regular library client usage,
-  *        this doesn't need to be called, and the macro UNIT should be used
-  *        instead.
-  * @param [in] name  Name of the unit test case.
-  * @param [in] function  Pointer to unit test case function.
-  * @returns True if all tests pass, false otherwise.
-  */
-  static void RegisterFunction(const std::string &name,
-                               UnitFunction function) {
-    Instance().unitfunction_map_.emplace(name, function);
-  }
-
-  /**
-  * @brief Helper class to register a unit test in construction time. This is
-  *        used to call RegisterFunction in the construction of a static
-  *        helper object. Used by the REGISTER_UNIT macro, which in turn is
-  *        used by the UNIT macro.
-  * @returns True if all tests pass, false otherwise.
-  */
-  class Registrator {
-  public:
-    Registrator(const std::string &name,
-                UnitFunction function) {
-      UnitTester::RegisterFunction(name, function);
-    };
-    Registrator(const Registrator&) = delete;
-    Registrator(Registrator&&) = delete;
-    ~Registrator() {};
+  struct UnitFunctionResult {
+    bool success{ true };
   };
 
-  ~UnitTester() {};
-  UnitTester(const UnitTester&) = delete;
-  UnitTester(UnitTester&&) = delete;
+  /**
+  * @brief Unit test function type.
+  */
+  typedef void(*UnitFunction)(UnitFunctionResult*);
 
-private:
-  UnitTester() {};
-  static UnitTester& Instance() {
-    static UnitTester instance;
-    return instance;
-  }
-  std::map<std::string, UnitFunction> unitfunction_map_;
-};
+  /**
+  * @brief Main class for unit test management. This class is a singleton
+  *        and maintains a list of all registered unit test cases.
+  */
+  class UnitTester {
+  public:
+    /**
+    * @brief Run all the registered unit test cases.
+    * @returns True if all tests pass, false otherwise.
+    */
+    static bool Run() {
+      std::vector<std::string> failures, sucesses;
+
+      TERMINAL_INFO
+        << "Will run " << Instance().unitfunction_map_.size()
+        << " test cases";
+
+      // Iterate all registered unit tests
+      for (auto& unit : Instance().unitfunction_map_) {
+        std::cout << MICROUNIT_SEPARATOR << std::endl;
+        TERMINAL_GOOD << "Test case '" << unit.first << "'";
+
+        // Run the unit test
+        UnitFunctionResult result;
+        unit.second(&result);
+
+        if (!result.success) {
+          TERMINAL_BAD << "Failed test";
+          failures.push_back(unit.first);
+        }
+        else {
+          TERMINAL_GOOD << "Passed test";
+          sucesses.push_back(unit.first);
+        }
+      }
+      std::cout
+        << MICROUNIT_SEPARATOR << std::endl
+        << MICROUNIT_SEPARATOR << std::endl;
+
+      TERMINAL_GOOD << "Passed " << sucesses.size()
+        << " test cases:";
+      for (const auto& success_t : sucesses) {
+        TERMINAL_GOOD << success_t;
+      }
+      std::cout << MICROUNIT_SEPARATOR << std::endl;
+
+      // Output result summary
+      if (failures.empty()) {
+        TERMINAL_GOOD << "All tests passed";
+        std::cout << MICROUNIT_SEPARATOR << std::endl;
+        return true;
+      }
+      else {
+        TERMINAL_BAD << "Failed " << failures.size()
+          << " test cases:";
+        for (const auto& failure : failures) {
+          TERMINAL_BAD << failure;
+        }
+        std::cout << MICROUNIT_SEPARATOR << std::endl;
+        return false;
+      }
+    }
+
+    /**
+    * @brief Register a unit test case function. In regular library client usage,
+    *        this doesn't need to be called, and the macro UNIT should be used
+    *        instead.
+    * @param [in] name  Name of the unit test case.
+    * @param [in] function  Pointer to unit test case function.
+    * @returns True if all tests pass, false otherwise.
+    */
+    static void RegisterFunction(const std::string &name,
+      UnitFunction function) {
+      Instance().unitfunction_map_.emplace(name, function);
+    }
+
+    /**
+    * @brief Helper class to register a unit test in construction time. This is
+    *        used to call RegisterFunction in the construction of a static
+    *        helper object. Used by the REGISTER_UNIT macro, which in turn is
+    *        used by the UNIT macro.
+    * @returns True if all tests pass, false otherwise.
+    */
+    class Registrator {
+    public:
+      Registrator(const std::string &name,
+        UnitFunction function) {
+        UnitTester::RegisterFunction(name, function);
+      };
+      Registrator(const Registrator&) = delete;
+      Registrator(Registrator&&) = delete;
+      ~Registrator() {};
+    };
+
+    ~UnitTester() {};
+    UnitTester(const UnitTester&) = delete;
+    UnitTester(UnitTester&&) = delete;
+
+  private:
+    UnitTester() {};
+    static UnitTester& Instance() {
+      static UnitTester instance;
+      return instance;
+    }
+    std::map<std::string, UnitFunction> unitfunction_map_;
+  };
 }
 
 #define MACROCAT_NEXP(A, B) A ## B
