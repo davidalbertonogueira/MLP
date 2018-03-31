@@ -24,11 +24,11 @@ public:
       const std::vector<std::string> & layers_activfuncs,
       bool use_constant_weight_init = false,
       double constant_weight_init = 0.5);
-  MLP(std::string & filename);
+  MLP(const std::string & filename);
   ~MLP();
 
-  void SaveMLPNetwork(std::string & filename)const;
-  void LoadMLPNetwork(std::string & filename);
+  void SaveMLPNetwork(const std::string & filename)const;
+  void LoadMLPNetwork(const std::string & filename);
 
   void GetOutput(const std::vector<double> &input,
                  std::vector<double> * output,

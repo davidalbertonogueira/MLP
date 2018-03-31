@@ -28,7 +28,7 @@ MLP::MLP(const std::vector<uint64_t> & layers_nodes,
             constant_weight_init);
 };
 
-MLP::MLP(std::string & filename) {
+MLP::MLP(const std::string & filename) {
   LoadMLPNetwork(filename);
 }
 
@@ -58,7 +58,7 @@ void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
   }
 };
 
-void MLP::SaveMLPNetwork(std::string & filename)const {
+void MLP::SaveMLPNetwork(const std::string & filename)const {
   FILE * file;
   file = fopen(filename.c_str(), "wb");
   fwrite(&m_num_inputs, sizeof(m_num_inputs), 1, file);
@@ -71,7 +71,7 @@ void MLP::SaveMLPNetwork(std::string & filename)const {
   }
   fclose(file);
 };
-void MLP::LoadMLPNetwork(std::string & filename) {
+void MLP::LoadMLPNetwork(const std::string & filename) {
   m_layers_nodes.clear();
   m_layers.clear();
 
