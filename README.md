@@ -68,11 +68,12 @@ Saving and loading models is also very intuitive:
 ```cpp
 #include "MLP.h"
 {
+  std::string model = "../../data/iris.mlp";
   //...
-  my_mlp.SaveMLPNetwork(std::string("../../data/iris.mlp")); //saving
+  my_mlp.SaveMLPNetwork(model); //saving
 }
 {
-  MLP my_mlp(std::string("../../data/iris.mlp")); //load a model in constructor
+  MLP my_mlp(model); //load a model in constructor
   //...
 }
 ```
