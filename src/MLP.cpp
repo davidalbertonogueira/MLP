@@ -10,10 +10,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-
-#ifdef MLP_EASYLOGGING
 #include "easylogging++.h"
-#endif
 
 
 //desired call sintax :  MLP({64*64,20,4}, {"sigmoid", "linear"},
@@ -208,9 +205,9 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
           temp_training << predicted_output[i];
         }
         temp_training << "]";
-		#ifdef MLP_EASYLOGGING
+	
         LOG(INFO) << temp_training.str();
-		#endif
+	
       }
 
       for (int j = 0; j < predicted_output.size(); j++) {
@@ -225,15 +222,14 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
                     learning_rate);
     }
 
-	#ifdef MLP_EASYLOGGING
+
     if (output_log && ((i % (max_iterations / 10)) == 0))
       LOG(INFO) << "Iteration " << i << " cost function f(error): "
       << current_iteration_cost_function;
-	#endif
+
     if (current_iteration_cost_function < min_error_cost)
       break;
   }
-  #ifdef MLP_EASYLOGGING
   LOG(INFO) << "Iteration " << i << " cost function f(error): "
     << current_iteration_cost_function;
 
@@ -241,7 +237,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
   LOG(INFO) << "******* TRAINING ENDED *******";
   LOG(INFO) << "******* " << i << " iters *******";
   LOG(INFO) << "******************************";
-  #endif
+
   //{
   //  int layer_i = -1;
   //  int node_i = -1;
