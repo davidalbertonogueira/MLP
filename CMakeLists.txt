@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 project(MLP VERSION 1.0)
 
-
-# add_compile_definitions(MLP_EASYLOGGING) ## For enable easy logging
-
 set(SHARED_LIB_NAME ${PROJECT_NAME})
 set(STATIC_LIB_NAME ${PROJECT_NAME}_static)
 set(MLP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/MLP.cpp")
