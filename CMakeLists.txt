@@ -4,13 +4,20 @@ project(MLP VERSION 1.0)
 ######################################
 ############### OPTIONS ##############
 ######################################
-option(BUILD_SHARED_LIB "Building shared library" ON)
-option(BUILD_STATIC_LIB "Building static library" ON)
-option(MLP_EASYLOGGING "Enable logging" ON)
+option(MLP_BUILD_SHARED_LIB "Building shared library" ON)
+option(MLP_BUILD_STATIC_LIB "Building static library" ON)
+option(MLP_BUILD_TESTS "Building tests" ON)
+option(MLP_EASYLOGGING "Enable logging" OFF)
 
 if (MLP_EASYLOGGING)
 	add_compile_definitions("MLP_EASYLOGGING")
 endif()
+
+################
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/deps")
+################
+
+message(STATUS "Current source dir ${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(MLP_SHARED_LIB_NAME ${PROJECT_NAME})
 set(MLP_STATIC_LIB_NAME ${PROJECT_NAME}_static)
@@ -25,25 +32,25 @@ set(MLP_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/MLP.h"
 ######### BUILDING LIBRARIES #########
 ######################################
 #### STATIC LIBRARY
-if (BUILD_STATIC_LIB)
+if (MLP_BUILD_STATIC_LIB)
 	add_library(${MLP_STATIC_LIB_NAME} STATIC ${MLP_HEADER_FILES} ${MLP_SOURCE_FILES})
 	set_target_properties(${MLP_STATIC_LIB_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 	set_target_properties(${MLP_STATIC_LIB_NAME} PROPERTIES SOVERSION 1)
 	set_target_properties(${MLP_STATIC_LIB_NAME} PROPERTIES PUBLIC_HEADER ${MLP_HEADER_FILES})
-	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE ".")
-	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE "src")
-	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE "deps")
+	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+	target_include_directories(${MLP_STATIC_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps")
 endif()
 
 #### SHARED LIBRARY
-if (BUILD_SHARED_LIB)
+if (MLP_BUILD_SHARED_LIB)
 	add_library(${MLP_SHARED_LIB_NAME} SHARED ${MLP_HEADER_FILES} ${MLP_SOURCE_FILES})
 	set_target_properties(${MLP_SHARED_LIB_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 	set_target_properties(${MLP_SHARED_LIB_NAME} PROPERTIES SOVERSION 1)
 	set_target_properties(${MLP_SHARED_LIB_NAME} PROPERTIES PUBLIC_HEADER ${MLP_HEADER_FILES})
-	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE ".")
-	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE "src")
-	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE "deps")
+	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+	target_include_directories(${MLP_SHARED_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps")
 
 	if(UNIX) ## Install shared lib
 		include(GNUInstallDirs)
@@ -51,4 +58,12 @@ if (BUILD_SHARED_LIB)
 			LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 			PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 	endif(UNIX)
+
 endif()
+
+######################################
+########### BUILDING TESTS ###########
+######################################
+# if (MLP_BUILD_TESTS)
+
+# endif()
