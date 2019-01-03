@@ -124,7 +124,7 @@ public:
     fwrite(&str_size, sizeof(size_t), 1, file);
     fwrite(m_activation_function_str.c_str(), sizeof(char), str_size, file);
 
-    for (int i = 0; i < m_nodes.size(); i++) {
+    for (size_t i = 0; i < m_nodes.size(); i++) {
       m_nodes[i].SaveNode(file);
     }
   };
@@ -149,7 +149,7 @@ public:
     m_deriv_activation_function = (*pair).second;
     
     m_nodes.resize(m_num_nodes);
-    for (int i = 0; i < m_nodes.size(); i++) {
+    for (size_t i = 0; i < m_nodes.size(); i++) {
       m_nodes[i].LoadNode(file);
     }
 

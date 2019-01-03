@@ -40,6 +40,7 @@ public:
                        int max_iterations = 5000,
                        double min_error_cost = 0.001,
                        bool output_log = true);
+
 protected:
   void UpdateWeights(const std::vector<std::vector<double>> & all_layers_activations,
                      const std::vector<double> &error,

@@ -36,7 +36,6 @@ UNIT(LearnAND) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -46,7 +45,7 @@ UNIT(LearnAND) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -76,7 +75,6 @@ UNIT(LearnNAND) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -86,7 +84,7 @@ UNIT(LearnNAND) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -116,7 +114,6 @@ UNIT(LearnOR) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -126,7 +123,7 @@ UNIT(LearnOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -156,7 +153,6 @@ UNIT(LearnNOR) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -166,7 +162,7 @@ UNIT(LearnNOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -194,7 +190,6 @@ UNIT(LearnXOR) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -204,7 +199,7 @@ UNIT(LearnXOR) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -230,7 +225,6 @@ UNIT(LearnNOT) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -240,7 +234,7 @@ UNIT(LearnNOT) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -268,7 +262,6 @@ UNIT(LearnX1) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -278,7 +271,7 @@ UNIT(LearnX1) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);
@@ -306,7 +299,6 @@ UNIT(LearnX2) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   size_t num_outputs = training_sample_set_with_bias[0].GetOutputVectorSize();
   MLP my_mlp({ num_features, 2 ,num_outputs }, { "sigmoid", "linear" });
@@ -316,7 +308,7 @@ UNIT(LearnX2) {
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
-    for (int i = 0; i < num_outputs; i++) {
+    for (size_t i = 0; i < num_outputs; i++) {
       bool predicted_output = output[i] > 0.5 ? true : false;
       bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
       ASSERT_TRUE(predicted_output == correct_output);

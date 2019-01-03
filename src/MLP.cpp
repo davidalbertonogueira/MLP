@@ -152,8 +152,9 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
                           int max_iterations,
                           double min_error_cost,
                           bool output_log) {
-  int num_examples = training_sample_set_with_bias.size();
-  int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
+  //rlunaro.03/01/2019. the compiler says that these variables are unused
+  //int num_examples = training_sample_set_with_bias.size();
+  //int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
 
   //{
   //  int layer_i = -1;
@@ -174,7 +175,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
   //  }
   //}
 
-  size_t i = 0;
+  int i = 0;
   double current_iteration_cost_function = 0.0;
 
   for (i = 0; i < max_iterations; i++) {
@@ -199,7 +200,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
         temp_training << training_sample_with_bias << "\t\t";
 
         temp_training << "Predicted output: [";
-        for (int i = 0; i < predicted_output.size(); i++) {
+        for (size_t i = 0; i < predicted_output.size(); i++) {
           if (i != 0)
             temp_training << ", ";
           temp_training << predicted_output[i];
@@ -210,7 +211,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
 	
       }
 
-      for (int j = 0; j < predicted_output.size(); j++) {
+      for (size_t j = 0; j < predicted_output.size(); j++) {
         current_iteration_cost_function +=
           (std::pow)((correct_output[j] - predicted_output[j]), 2);
         deriv_error_output[j] =

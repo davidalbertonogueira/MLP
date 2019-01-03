@@ -110,11 +110,11 @@ inline void Softmax(std::vector<double> *output) {
   size_t num_elements = output->size();
   std::vector<double> exp_output(num_elements);
   double exp_total = 0.0;
-  for (int i = 0; i < num_elements; i++) {
+  for (size_t i = 0; i < num_elements; i++) {
     exp_output[i] = exp((*output)[i]);
     exp_total += exp_output[i];
   }
-  for (int i = 0; i < num_elements; i++) {
+  for (size_t i = 0; i < num_elements; i++) {
     (*output)[i] = exp_output[i] / exp_total;
   }
 }
