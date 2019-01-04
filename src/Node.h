@@ -15,6 +15,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert> // for assert()
+#include <exception>
 
 #define CONSTANT_WEIGHT_INITIALIZATION 0
 
@@ -79,6 +80,14 @@ public:
 
   const std::vector<double> & GetWeights() const {
     return m_weights;
+  }
+
+  void SetWeights( std::vector<double> & weights ){
+      // check size of the weights vector
+      if( weights.size() == m_num_inputs )
+          m_weights = weights;
+      else
+          throw new std::logic_error("Incorrect weight size in SetWeights call");
   }
 
   size_t GetWeightsVectorSize() const {

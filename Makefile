@@ -14,7 +14,8 @@ AUXLIBS =
 INCLUDES = -I$(LOCALDEPSINCLUDES) -I$(AUXINCLUDES)  
 LIBS = -L$(AUXLIBS) 
 #LIBS += -L/usr/local/lib/
-CFLAGS = -std=gnu++11 -std=c++11 -Wall -O3 -fmessage-length=0 -fPIC $(INCLUDES)
+#rlunaro: removed optimization for tests: -O3
+CFLAGS = -std=gnu++11 -std=c++11 -Wall -fmessage-length=0 -fPIC $(INCLUDES)
 CFLAGS += $(DEBUG)
 LFLAGS = $(LIBS)
 #For verbosity

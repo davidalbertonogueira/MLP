@@ -68,6 +68,14 @@ public:
     return m_nodes;
   }
 
+  /**
+   * Return the internal list of nodes, but modifiable.
+   */
+  std::vector<Node> & GetNodesChangeable() {
+    return m_nodes;
+  }
+
+
   void GetOutputAfterActivationFunction(const std::vector<double> &input,
                                         std::vector<double> * output) const {
     assert(input.size() == m_num_inputs_per_node);
@@ -115,6 +123,22 @@ public:
     }
   };
 
+
+  void SetWeights( std::vector<std::vector<double>> & weights )
+  {
+      if( 0 <= weights.size() && weights.size() <= m_num_nodes )
+      {
+          // traverse the list of nodes
+          size_t node_i = 0;
+          for( Node & node : m_nodes )
+          {
+              node.SetWeights( weights[node_i] );
+              node_i++;
+          }
+      }
+      else
+          throw new std::logic_error("Incorrect layer number in SetWeights call");
+  };
 
   void SaveLayer(FILE * file) const {
     fwrite(&m_num_nodes, sizeof(m_num_nodes), 1, file);

@@ -16,6 +16,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <exception>
 
 class MLP {
 public:
@@ -40,6 +41,9 @@ public:
                        int max_iterations = 5000,
                        double min_error_cost = 0.001,
                        bool output_log = true);
+  size_t GetNumLayers();
+  std::vector<std::vector<double>> GetLayerWeights( size_t layer_i );
+  void SetLayerWeights( size_t layer_i, std::vector<std::vector<double>> & weights );
 
 protected:
   void UpdateWeights(const std::vector<std::vector<double>> & all_layers_activations,
