@@ -5,10 +5,6 @@
 #ifndef MLP_H
 #define MLP_H
 
-#include "Layer.h"
-#include "Sample.h"
-#include "Utils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -17,6 +13,9 @@
 #include <vector>
 #include <algorithm>
 #include <exception>
+#include "Layer.h"
+#include "Sample.h"
+#include "Utils.h"
 
 class MLP {
 public:
@@ -54,7 +53,7 @@ private:
                  const std::vector<std::string> & layers_activfuncs,
                  bool use_constant_weight_init,
                  double constant_weight_init = 0.5);
-  int m_num_inputs{ 0 };
+  size_t m_num_inputs{ 0 };
   int m_num_outputs{ 0 };
   int m_num_hidden_layers{ 0 };
   std::vector<uint64_t> m_layers_nodes;

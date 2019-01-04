@@ -5,7 +5,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "Chrono.h"
 #include <stdlib.h>
 #include <math.h>
 #include <numeric>
@@ -22,6 +21,8 @@
 #include <typeinfo>
 #include <typeindex>
 #include <cassert>
+
+#include "Chrono.h"
 #ifdef _WIN32
 #include <time.h>
 #else

@@ -5,8 +5,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "Utils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -16,6 +14,7 @@
 #include <algorithm>
 #include <cassert> // for assert()
 #include <exception>
+#include "Utils.h"
 
 #define CONSTANT_WEIGHT_INITIALIZATION 0
 
@@ -150,7 +149,7 @@ public:
   };
 
 protected:
-  int m_num_inputs{ 0 };
+  size_t m_num_inputs{ 0 };
   double m_bias{ 0.0 };
   std::vector<double> m_weights;
 };

@@ -3,6 +3,7 @@
 // Author : David Nogueira
 //============================================================================
 #include "MLP.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -10,6 +11,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+
 #include "easylogging++.h"
 
 

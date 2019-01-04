@@ -347,6 +347,17 @@ UNIT(GetWeightsSetWeights) {
   // get layer weights
   std::vector<std::vector<double>> weights = my_mlp.GetLayerWeights( 1 );
 
+  for (const auto & training_sample : training_sample_set_with_bias) {
+    std::vector<double>  output;
+    my_mlp.GetOutput(training_sample.input_vector(), &output);
+    for (size_t i = 0; i < num_outputs; i++) {
+      bool predicted_output = output[i] > 0.5 ? true : false;
+      std::cout << "PREDICTED OUTPUT IS NOW: " << output[i] << std::endl;
+      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
+      ASSERT_TRUE(predicted_output == correct_output);
+    }
+  }
+
   // the expected value of the internal weights
   // after training are 1.65693 -0.538749
   ASSERT_TRUE(  1.6 <= weights[0][0] && weights[0][0] <=  1.7 );
@@ -358,24 +369,14 @@ UNIT(GetWeightsSetWeights) {
 
   my_mlp.SetLayerWeights( 1, zeroWeights );
 
-  /*
-   *
-   * PREDICTED OUTPUT IS NOW: 0.335394
-PREDICTED OUTPUT IS NOW: 1.13887
-PREDICTED OUTPUT IS NOW: 0.180468
-PREDICTED OUTPUT IS NOW: 1.00535
-   *
-   */
   for (const auto & training_sample : training_sample_set_with_bias) {
     std::vector<double>  output;
     my_mlp.GetOutput(training_sample.input_vector(), &output);
     for (size_t i = 0; i < num_outputs; i++) {
-      bool predicted_output = output[i] > 0.5 ? true : false;
-      std::cout << "PREDICTED OUTPUT IS NOW: " << output[i] << std::endl;
-      bool correct_output = training_sample.output_vector()[i] > 0.5 ? true : false;
-      ASSERT_TRUE(predicted_output == correct_output);
+      ASSERT_TRUE( -0.0001L <= output[i] && output[i] <= 0.0001L );
     }
   }
+
   LOG(INFO) << "Trained with success." << std::endl;
 }
 

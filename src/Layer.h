@@ -5,9 +5,6 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include "Utils.h"
-#include "Node.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -16,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 #include <cassert> // for assert()
+#include "Node.h"
+#include "Utils.h"
 
 class Layer {
 public:
@@ -82,7 +81,7 @@ public:
 
     output->resize(m_num_nodes);
 
-    for (int i = 0; i < m_num_nodes; ++i) {
+    for (size_t i = 0; i < m_num_nodes; ++i) {
       m_nodes[i].GetOutputAfterActivationFunction(input,
                                                   m_activation_function,
                                                   &((*output)[i]));
@@ -111,7 +110,7 @@ public:
       dE_doj = deriv_error[i];
       doj_dnetj = m_deriv_activation_function(net_sum);
 
-      for (int j = 0; j < m_num_inputs_per_node; j++) {
+      for (size_t j = 0; j < m_num_inputs_per_node; j++) {
         (*deltas)[j] += dE_doj * doj_dnetj * m_nodes[i].GetWeights()[j];
 
         dnetj_dwij = input_layer_activation[j];
@@ -180,8 +179,8 @@ public:
   };
 
 protected:
-  int m_num_inputs_per_node{ 0 };
-  int m_num_nodes{ 0 };
+  size_t m_num_inputs_per_node{ 0 };
+  size_t m_num_nodes{ 0 };
   std::vector<Node> m_nodes;
 
   std::string m_activation_function_str;
