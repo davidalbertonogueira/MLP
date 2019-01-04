@@ -1,7 +1,7 @@
 #!/bin/bash
 # Makefile for MLP
 CC = g++
-DEBUG = -g
+DEBUG = -g3
 PROJNAME = mlp
 
 HEADERPATH = ./src
@@ -14,7 +14,7 @@ AUXLIBS =
 INCLUDES = -I$(LOCALDEPSINCLUDES) -I$(AUXINCLUDES)  
 LIBS = -L$(AUXLIBS) 
 #LIBS += -L/usr/local/lib/
-CFLAGS = -std=gnu++11 -std=c++11 -O3 -Wall  -fmessage-length=0 -fPIC $(INCLUDES)
+CFLAGS = -std=gnu++11 -std=c++11 -Wall -O3 -fmessage-length=0 -fPIC $(INCLUDES)
 CFLAGS += $(DEBUG)
 LFLAGS = $(LIBS)
 #For verbosity
@@ -59,7 +59,7 @@ NodeTest: $(SOURCEPATH)/NodeTest.o  $(SOURCEPATH)/MLP.o
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 clean:
 	@echo Clean
-	rm -f *~ *.o *~
+	rm -f *~ $(SOURCEPATH)/*.o *~
 	@echo Success
 
 cleanall:

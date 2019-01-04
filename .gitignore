@@ -214,3 +214,11 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 /build
+/.cproject
+/.project
+/IrisDatasetTest
+/LayerTest
+/MLPTest
+/NodeTest
+/mlp.a
+/mlp.so
