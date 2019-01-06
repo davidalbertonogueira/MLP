@@ -81,7 +81,6 @@ UNIT(LearnAND) {
     }
   }
 
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);
@@ -116,7 +115,6 @@ UNIT(LearnNAND) {
       training_sample_with_bias.AddBiasValue(1);
     }
   }
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);
@@ -151,7 +149,6 @@ UNIT(LearnOR) {
       training_sample_with_bias.AddBiasValue(1);
     }
   }
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);
@@ -185,7 +182,6 @@ UNIT(LearnNOR) {
       training_sample_with_bias.AddBiasValue(1);
     }
   }
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);
@@ -218,7 +214,6 @@ UNIT(LearnNOT) {
       training_sample_with_bias.AddBiasValue(1);
     }
   }
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);
@@ -253,7 +248,6 @@ UNIT(LearnXOR) {
       training_sample_with_bias.AddBiasValue(1);
     }
   }
-  size_t num_examples = training_sample_set_with_bias.size();
   size_t num_features = training_sample_set_with_bias[0].GetInputVectorSize();
   Node my_node(num_features);
   Train(my_node, training_sample_set_with_bias, 0.1, 100);

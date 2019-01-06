@@ -5,9 +5,6 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include "Utils.h"
-#include "Node.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -16,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 #include <cassert> // for assert()
+#include "Node.h"
+#include "Utils.h"
 
 class Layer {
 public:
@@ -68,13 +67,21 @@ public:
     return m_nodes;
   }
 
+  /**
+   * Return the internal list of nodes, but modifiable.
+   */
+  std::vector<Node> & GetNodesChangeable() {
+    return m_nodes;
+  }
+
+
   void GetOutputAfterActivationFunction(const std::vector<double> &input,
                                         std::vector<double> * output) const {
     assert(input.size() == m_num_inputs_per_node);
 
     output->resize(m_num_nodes);
 
-    for (int i = 0; i < m_num_nodes; ++i) {
+    for (size_t i = 0; i < m_num_nodes; ++i) {
       m_nodes[i].GetOutputAfterActivationFunction(input,
                                                   m_activation_function,
                                                   &((*output)[i]));
@@ -103,7 +110,7 @@ public:
       dE_doj = deriv_error[i];
       doj_dnetj = m_deriv_activation_function(net_sum);
 
-      for (int j = 0; j < m_num_inputs_per_node; j++) {
+      for (size_t j = 0; j < m_num_inputs_per_node; j++) {
         (*deltas)[j] += dE_doj * doj_dnetj * m_nodes[i].GetWeights()[j];
 
         dnetj_dwij = input_layer_activation[j];
@@ -116,6 +123,22 @@ public:
   };
 
 
+  void SetWeights( std::vector<std::vector<double>> & weights )
+  {
+      if( 0 <= weights.size() && weights.size() <= m_num_nodes )
+      {
+          // traverse the list of nodes
+          size_t node_i = 0;
+          for( Node & node : m_nodes )
+          {
+              node.SetWeights( weights[node_i] );
+              node_i++;
+          }
+      }
+      else
+          throw new std::logic_error("Incorrect layer number in SetWeights call");
+  };
+
   void SaveLayer(FILE * file) const {
     fwrite(&m_num_nodes, sizeof(m_num_nodes), 1, file);
     fwrite(&m_num_inputs_per_node, sizeof(m_num_inputs_per_node), 1, file);
@@ -124,7 +147,7 @@ public:
     fwrite(&str_size, sizeof(size_t), 1, file);
     fwrite(m_activation_function_str.c_str(), sizeof(char), str_size, file);
 
-    for (int i = 0; i < m_nodes.size(); i++) {
+    for (size_t i = 0; i < m_nodes.size(); i++) {
       m_nodes[i].SaveNode(file);
     }
   };
@@ -149,15 +172,15 @@ public:
     m_deriv_activation_function = (*pair).second;
     
     m_nodes.resize(m_num_nodes);
-    for (int i = 0; i < m_nodes.size(); i++) {
+    for (size_t i = 0; i < m_nodes.size(); i++) {
       m_nodes[i].LoadNode(file);
     }
 
   };
 
 protected:
-  int m_num_inputs_per_node{ 0 };
-  int m_num_nodes{ 0 };
+  size_t m_num_inputs_per_node{ 0 };
+  size_t m_num_nodes{ 0 };
   std::vector<Node> m_nodes;
 
   std::string m_activation_function_str;

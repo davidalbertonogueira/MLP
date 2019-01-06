@@ -30,7 +30,7 @@ public:
 protected:
   virtual void PrintMyself(std::ostream& stream) const {
     stream << "Input vector: [";
-    for (int i = 0; i < m_input_vector.size(); i++) {
+    for (size_t i = 0; i < m_input_vector.size(); i++) {
       if (i != 0)
         stream << ", ";
       stream << m_input_vector[i];
@@ -59,7 +59,7 @@ public:
 protected:
   virtual void PrintMyself(std::ostream& stream) const {
     stream << "Input vector: [";
-    for (int i = 0; i < m_input_vector.size(); i++) {
+    for (size_t i = 0; i < m_input_vector.size(); i++) {
       if (i != 0)
         stream << ", ";
       stream << m_input_vector[i];
@@ -69,7 +69,7 @@ protected:
     stream << "; ";
 
     stream << "Output vector: [";
-    for (int i = 0; i < m_output_vector.size(); i++) {
+    for (size_t i = 0; i < m_output_vector.size(); i++) {
       if (i != 0)
         stream << ", ";
       stream << m_output_vector[i];

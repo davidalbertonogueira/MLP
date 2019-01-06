@@ -3,6 +3,7 @@
 // Author : David Nogueira
 //============================================================================
 #include "MLP.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -10,6 +11,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+
 #include "easylogging++.h"
 
 
@@ -48,7 +50,7 @@ void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
   m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
   m_num_hidden_layers = m_layers_nodes.size() - 2;
 
-  for (int i = 0; i < m_layers_nodes.size() - 1; i++) {
+  for (size_t i = 0; i < m_layers_nodes.size() - 1; i++) {
     m_layers.emplace_back(Layer(m_layers_nodes[i],
                                 m_layers_nodes[i + 1],
                                 layers_activfuncs[i],
@@ -65,7 +67,7 @@ void MLP::SaveMLPNetwork(const std::string & filename)const {
   fwrite(&m_num_hidden_layers, sizeof(m_num_hidden_layers), 1, file);
   if (!m_layers_nodes.empty())
     fwrite(&m_layers_nodes[0], sizeof(m_layers_nodes[0]), m_layers_nodes.size(), file);
-  for (int i = 0; i < m_layers.size(); i++) {
+  for (size_t i = 0; i < m_layers.size(); i++) {
     m_layers[i].SaveLayer(file);
   }
   fclose(file);
@@ -83,7 +85,7 @@ void MLP::LoadMLPNetwork(const std::string & filename) {
   if (!m_layers_nodes.empty())
     fread(&m_layers_nodes[0], sizeof(m_layers_nodes[0]), m_layers_nodes.size(), file);
   m_layers.resize(m_layers_nodes.size() - 1);
-  for (int i = 0; i < m_layers.size(); i++) {
+  for (size_t i = 0; i < m_layers.size(); i++) {
     m_layers[i].LoadLayer(file);
   }
   fclose(file);
@@ -103,7 +105,7 @@ void MLP::GetOutput(const std::vector<double> &input,
   std::vector<double> temp_out(temp_size, 0.0);
   temp_in = input;
 
-  for (int i = 0; i < m_layers.size(); ++i) {
+  for (size_t i = 0; i < m_layers.size(); ++i) {
     if (i > 0) {
       //Store this layer activation
       if (all_layers_activations != nullptr)
@@ -152,8 +154,9 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
                           int max_iterations,
                           double min_error_cost,
                           bool output_log) {
-  int num_examples = training_sample_set_with_bias.size();
-  int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
+  //rlunaro.03/01/2019. the compiler says that these variables are unused
+  //int num_examples = training_sample_set_with_bias.size();
+  //int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
 
   //{
   //  int layer_i = -1;
@@ -174,7 +177,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
   //  }
   //}
 
-  size_t i = 0;
+  int i = 0;
   double current_iteration_cost_function = 0.0;
 
   for (i = 0; i < max_iterations; i++) {
@@ -199,7 +202,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
         temp_training << training_sample_with_bias << "\t\t";
 
         temp_training << "Predicted output: [";
-        for (int i = 0; i < predicted_output.size(); i++) {
+        for (size_t i = 0; i < predicted_output.size(); i++) {
           if (i != 0)
             temp_training << ", ";
           temp_training << predicted_output[i];
@@ -210,7 +213,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
 	
       }
 
-      for (int j = 0; j < predicted_output.size(); j++) {
+      for (size_t j = 0; j < predicted_output.size(); j++) {
         current_iteration_cost_function +=
           (std::pow)((correct_output[j] - predicted_output[j]), 2);
         deriv_error_output[j] =
@@ -257,5 +260,40 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
   //  }
   //}
 };
+
+
+size_t MLP::GetNumLayers()
+{
+    return m_layers.size();
+}
+
+std::vector<std::vector<double>> MLP::GetLayerWeights( size_t layer_i )
+{
+    std::vector<std::vector<double>> ret_val;
+    // check parameters
+    if( 0 <= layer_i && layer_i < m_layers.size() )
+    {
+        Layer current_layer = m_layers[layer_i];
+        for( Node & node : current_layer.GetNodesChangeable() )
+        {
+            ret_val.push_back( node.GetWeights() );
+        }
+        return ret_val;
+    }
+    else
+        throw new std::logic_error("Incorrect layer number in GetLayerWeights call");
+
+}
+
+void MLP::SetLayerWeights( size_t layer_i, std::vector<std::vector<double>> & weights )
+{
+    // check parameters
+    if( 0 <= layer_i && layer_i < m_layers.size() )
+    {
+        m_layers[layer_i].SetWeights( weights );
+    }
+    else
+        throw new std::logic_error("Incorrect layer number in SetLayerWeights call");
+}
 
 

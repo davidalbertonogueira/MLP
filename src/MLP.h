@@ -5,10 +5,6 @@
 #ifndef MLP_H
 #define MLP_H
 
-#include "Layer.h"
-#include "Sample.h"
-#include "Utils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -16,6 +12,10 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <exception>
+#include "Layer.h"
+#include "Sample.h"
+#include "Utils.h"
 
 class MLP {
 public:
@@ -40,6 +40,10 @@ public:
                        int max_iterations = 5000,
                        double min_error_cost = 0.001,
                        bool output_log = true);
+  size_t GetNumLayers();
+  std::vector<std::vector<double>> GetLayerWeights( size_t layer_i );
+  void SetLayerWeights( size_t layer_i, std::vector<std::vector<double>> & weights );
+
 protected:
   void UpdateWeights(const std::vector<std::vector<double>> & all_layers_activations,
                      const std::vector<double> &error,
@@ -49,7 +53,7 @@ private:
                  const std::vector<std::string> & layers_activfuncs,
                  bool use_constant_weight_init,
                  double constant_weight_init = 0.5);
-  int m_num_inputs{ 0 };
+  size_t m_num_inputs{ 0 };
   int m_num_outputs{ 0 };
   int m_num_hidden_layers{ 0 };
   std::vector<uint64_t> m_layers_nodes;

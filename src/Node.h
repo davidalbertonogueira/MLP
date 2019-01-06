@@ -5,8 +5,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "Utils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -15,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 #include <cassert> // for assert()
+#include <exception>
+#include "Utils.h"
 
 #define CONSTANT_WEIGHT_INITIALIZATION 0
 
@@ -81,6 +81,14 @@ public:
     return m_weights;
   }
 
+  void SetWeights( std::vector<double> & weights ){
+      // check size of the weights vector
+      if( weights.size() == m_num_inputs )
+          m_weights = weights;
+      else
+          throw new std::logic_error("Incorrect weight size in SetWeights call");
+  }
+
   size_t GetWeightsVectorSize() const {
     return m_weights.size();
   }
@@ -141,7 +149,7 @@ public:
   };
 
 protected:
-  int m_num_inputs{ 0 };
+  size_t m_num_inputs{ 0 };
   double m_bias{ 0.0 };
   std::vector<double> m_weights;
 };
