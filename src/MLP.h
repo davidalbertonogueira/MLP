@@ -19,7 +19,7 @@
 
 class MLP {
 public:
-  //desired call sintax :  MLP({64*64,20,4}, {"sigmoid", "linear"},
+  //desired call syntax :  MLP({64*64,20,4}, {"sigmoid", "linear"},
   MLP(const std::vector<uint64_t> & layers_nodes,
       const std::vector<std::string> & layers_activfuncs,
       bool use_constant_weight_init = false,
