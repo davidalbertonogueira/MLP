@@ -5,6 +5,7 @@
 #ifndef TRAININGSAMPLE_H
 #define TRAININGSAMPLE_H
 
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
 
