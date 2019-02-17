@@ -28,6 +28,9 @@ public:
     obj.PrintMyself(stream);
     return stream;
   };
+  // to avoid the error "class has virtual method
+  // but non virtual destructor"
+  virtual ~Sample() {};
 protected:
   virtual void PrintMyself(std::ostream& stream) const {
     stream << "Input vector: [";
@@ -56,7 +59,9 @@ public:
   size_t GetOutputVectorSize() const {
     return m_output_vector.size();
   }
-
+  // to avoid the error "class has virtual method
+  // but non virtual destructor"
+  virtual ~TrainingSample() {};
 protected:
   virtual void PrintMyself(std::ostream& stream) const {
     stream << "Input vector: [";
