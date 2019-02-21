@@ -24,7 +24,7 @@ public:
       const std::vector<std::string> & layers_activfuncs,
       bool use_constant_weight_init = false,
       double constant_weight_init = 0.5,
-      bool use_softmax_on_each_output );
+      bool use_softmax_on_each_output = true );
   MLP(const std::string & filename);
   ~MLP();
 

@@ -61,6 +61,21 @@ inline double deriv_linear(double x) {
   return 1;
 };
 
+inline double relu(double x) {
+    if( x > 0 )
+        return x;
+    else
+        return 0.0L;
+}
+
+inline double deriv_relu(double x){
+    if( x > 0 )
+        return 1.0L;
+    else
+        return 0.0L;
+}
+
+
 struct ActivationFunctionsManager {
   bool GetActivationFunctionPair(const std::string & activation_name,
                                     std::pair<std::function<double(double)>,
@@ -88,8 +103,9 @@ private:
 
   ActivationFunctionsManager() {
     AddNewPair("sigmoid", sigmoid, deriv_sigmoid);
-    AddNewPair("tanh", hyperbolic_tan, deriv_hyperbolic_tan);
-    AddNewPair("linear", linear, deriv_linear);
+    AddNewPair("tanh",    hyperbolic_tan, deriv_hyperbolic_tan);
+    AddNewPair("linear",  linear, deriv_linear);
+    AddNewPair("relu",    relu, deriv_relu);
   };
 
   std::unordered_map<std::string,
