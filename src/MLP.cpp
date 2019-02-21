@@ -19,14 +19,16 @@
 MLP::MLP(const std::vector<uint64_t> & layers_nodes,
          const std::vector<std::string> & layers_activfuncs,
          bool use_constant_weight_init,
-         double constant_weight_init) {
+         double constant_weight_init,
+         bool use_softmax_on_each_output ) {
   assert(layers_nodes.size() >= 2);
   assert(layers_activfuncs.size() + 1 == layers_nodes.size());
 
   CreateMLP(layers_nodes,
             layers_activfuncs,
             use_constant_weight_init,
-            constant_weight_init);
+            constant_weight_init,
+            use_softmax_on_each_output );
 };
 
 MLP::MLP(const std::string & filename) {
@@ -44,11 +46,13 @@ MLP::~MLP() {
 void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
                     const std::vector<std::string> & layers_activfuncs,
                     bool use_constant_weight_init,
-                    double constant_weight_init) {
+                    double constant_weight_init,
+                    bool use_softmax_on_each_output ) {
   m_layers_nodes = layers_nodes;
   m_num_inputs = m_layers_nodes[0];
   m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
   m_num_hidden_layers = m_layers_nodes.size() - 2;
+  MLP::use_softmax_on_each_output = use_softmax_on_each_output;
 
   for (size_t i = 0; i < m_layers_nodes.size() - 1; i++) {
     m_layers.emplace_back(Layer(m_layers_nodes[i],
@@ -93,7 +97,7 @@ void MLP::LoadMLPNetwork(const std::string & filename) {
 
 void MLP::GetOutput(const std::vector<double> &input,
                     std::vector<double> * output,
-                    std::vector<std::vector<double>> * all_layers_activations) const {
+                    std::vector<std::vector<double>> * all_layers_activations ) const {
   assert(input.size() == m_num_inputs);
   int temp_size;
   if (m_num_hidden_layers == 0)
@@ -116,11 +120,14 @@ void MLP::GetOutput(const std::vector<double> &input,
       temp_out.clear();
       temp_out.resize(m_layers[i].GetOutputSize());
     }
-    m_layers[i].GetOutputAfterActivationFunction(temp_in, &temp_out);
+    m_layers[i].GetOutputAfterActivationFunction(temp_in, temp_out);
   }
 
-  if (temp_out.size() > 1)
-    utils::Softmax(&temp_out);
+  if( use_softmax_on_each_output )
+  {
+      if (temp_out.size() > 1)
+        utils::Softmax(&temp_out);
+  }
   *output = temp_out;
 
   //Add last layer activation
@@ -147,35 +154,55 @@ void MLP::UpdateWeights(const std::vector<std::vector<double>> & all_layers_acti
       deltas.clear();
     }
   }
-};
+}
+
+void MLP::log_weights( const std::string & message ) const
+{
+    int layer_i = -1;
+    int node_i = -1;
+    LOG(DEBUG) << message << ": ";
+    for (const auto & layer : m_layers) {
+        layer_i++;
+        node_i = -1;
+        LOG(DEBUG) << "Layer " << layer_i << " :";
+        for (const auto & node : layer.GetNodes()) {
+          node_i++;
+          std::stringstream node_line;
+          node_line << "\tNode " << node_i << " :\t";
+          for (auto m_weightselement : node.GetWeights()) {
+            node_line << m_weightselement << "\t";
+          }
+          LOG(DEBUG) << node_line.str();
+        }
+    }
+}
+
+
+void MLP::log_input_output( TrainingSample training_sample_with_bias,
+                        std::vector<double> predicted_output ) const
+{
+    std::stringstream temp_training;
+    temp_training << training_sample_with_bias << "\t\t";
+
+    temp_training << "Predicted output: [";
+    for (size_t i = 0; i < predicted_output.size(); i++) {
+      if (i != 0)
+        temp_training << ", ";
+      temp_training << predicted_output[i];
+    }
+    temp_training << "]";
+
+    LOG(INFO) << temp_training.str();
+}
 
 void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias,
                           double learning_rate,
                           int max_iterations,
                           double min_error_cost,
                           bool output_log) {
-  //rlunaro.03/01/2019. the compiler says that these variables are unused
-  //int num_examples = training_sample_set_with_bias.size();
-  //int num_features = training_sample_set_with_bias[0].GetInputVectorSize();
 
-  //{
-  //  int layer_i = -1;
-  //  int node_i = -1;
-  //  std::cout << "Starting weights:" << std::endl;
-  //  for (const auto & layer : m_layers) {
-  //    layer_i++;
-  //    node_i = -1;
-  //    std::cout << "Layer " << layer_i << " :" << std::endl;
-  //    for (const auto & node : layer.GetNodes()) {
-  //      node_i++;
-  //      std::cout << "\tNode " << node_i << " :\t";
-  //      for (auto m_weightselement : node.GetWeights()) {
-  //        std::cout << m_weightselement << "\t";
-  //      }
-  //      std::cout << std::endl;
-  //    }
-  //  }
-  //}
+    if( output_log )
+        log_weights( "Starting weights" );
 
   int i = 0;
   double current_iteration_cost_function = 0.0;
@@ -198,19 +225,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       std::vector<double> deriv_error_output(predicted_output.size());
 
       if (output_log && ((i % (max_iterations / 10)) == 0)) {
-        std::stringstream temp_training;
-        temp_training << training_sample_with_bias << "\t\t";
-
-        temp_training << "Predicted output: [";
-        for (size_t i = 0; i < predicted_output.size(); i++) {
-          if (i != 0)
-            temp_training << ", ";
-          temp_training << predicted_output[i];
-        }
-        temp_training << "]";
-	
-        LOG(INFO) << temp_training.str();
-	
+          log_input_output( training_sample_with_bias, predicted_output );
       }
 
       for (size_t j = 0; j < predicted_output.size(); j++) {
@@ -241,24 +256,8 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
   LOG(INFO) << "******* " << i << " iters *******";
   LOG(INFO) << "******************************";
 
-  //{
-  //  int layer_i = -1;
-  //  int node_i = -1;
-  //  std::cout << "Final weights:" << std::endl;
-  //  for (const auto & layer : m_layers) {
-  //    layer_i++;
-  //    node_i = -1;
-  //    std::cout << "Layer " << layer_i << " :" << std::endl;
-  //    for (const auto & node : layer.GetNodes()) {
-  //      node_i++;
-  //      std::cout << "\tNode " << node_i << " :\t";
-  //      for (auto m_weightselement : node.GetWeights()) {
-  //        std::cout << m_weightselement << "\t";
-  //      }
-  //      std::cout << std::endl;
-  //    }
-  //  }
-  //}
+  if( output_log )
+      log_weights( "Final weights" );
 };
 
 

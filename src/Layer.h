@@ -76,15 +76,15 @@ public:
 
 
   void GetOutputAfterActivationFunction(const std::vector<double> &input,
-                                        std::vector<double> * output) const {
+                                        std::vector<double> &output) const {
     assert(input.size() == m_num_inputs_per_node);
 
-    output->resize(m_num_nodes);
+    output.resize(m_num_nodes);
 
     for (size_t i = 0; i < m_num_nodes; ++i) {
       m_nodes[i].GetOutputAfterActivationFunction(input,
                                                   m_activation_function,
-                                                  &((*output)[i]));
+                                                  &(output[i]));
     }
   }
 

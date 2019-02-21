@@ -23,7 +23,8 @@ public:
   MLP(const std::vector<uint64_t> & layers_nodes,
       const std::vector<std::string> & layers_activfuncs,
       bool use_constant_weight_init = false,
-      double constant_weight_init = 0.5);
+      double constant_weight_init = 0.5,
+      bool use_softmax_on_each_output );
   MLP(const std::string & filename);
   ~MLP();
 
@@ -32,7 +33,7 @@ public:
 
   void GetOutput(const std::vector<double> &input,
                  std::vector<double> * output,
-                 std::vector<std::vector<double>> * all_layers_activations = nullptr) const;
+                 std::vector<std::vector<double>> * all_layers_activations = nullptr ) const;
   void GetOutputClass(const std::vector<double> &output, size_t * class_id) const;
 
   void Train(const std::vector<TrainingSample> &training_sample_set_with_bias,
@@ -49,15 +50,20 @@ protected:
                      const std::vector<double> &error,
                      double learning_rate);
 private:
+  void log_weights( const std::string & message ) const;
+  void log_input_output(  TrainingSample training_sample_with_bias,
+                          std::vector<double> predicted_output ) const;
   void CreateMLP(const std::vector<uint64_t> & layers_nodes,
                  const std::vector<std::string> & layers_activfuncs,
                  bool use_constant_weight_init,
-                 double constant_weight_init = 0.5);
+                 double constant_weight_init = 0.5,
+                 bool use_softmax_on_each_output = true);
   size_t m_num_inputs{ 0 };
   int m_num_outputs{ 0 };
   int m_num_hidden_layers{ 0 };
   std::vector<uint64_t> m_layers_nodes;
   std::vector<Layer> m_layers;
+  bool use_softmax_on_each_output = true;
 };
 
 #endif //MLP_H

@@ -16,8 +16,6 @@
 #include <exception>
 #include "Utils.h"
 
-#define CONSTANT_WEIGHT_INITIALIZATION 0
-
 class Node {
 public:
   Node() {
@@ -124,8 +122,9 @@ public:
                      double error,
                      double learning_rate) {
     assert(x.size() == m_weights.size());
-    for (size_t i = 0; i < m_weights.size(); i++)
+    for (size_t i = 0; i < m_weights.size(); i++){
       m_weights[i] += x[i] * learning_rate *  error;
+    }
   };
 
   void UpdateWeight(int weight_id,
