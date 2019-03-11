@@ -21,6 +21,8 @@
 #include <typeinfo>
 #include <typeindex>
 #include <cassert>
+#include <exception>
+
 
 #include "Chrono.h"
 #ifdef _WIN32
@@ -76,16 +78,16 @@ inline double deriv_relu(double x){
 }
 
 
+using functionWithDeriv = std::pair<std::function<double(double)>, std::function<double(double)> >;
+
+
 struct ActivationFunctionsManager {
-  bool GetActivationFunctionPair(const std::string & activation_name,
-                                    std::pair<std::function<double(double)>,
-                                    std::function<double(double)> > **pair) {
+  functionWithDeriv GetActivationFunctionPair(const std::string & activation_name ) {
     auto iter = activation_functions_map.find(activation_name);
     if (iter != activation_functions_map.end())
-      *pair = &(iter->second);
+      return iter->second;
     else
-      return false;
-    return true;
+      throw std::runtime_error("Unknown activation function: " + activation_name );
   }
 
   static ActivationFunctionsManager & Singleton() {

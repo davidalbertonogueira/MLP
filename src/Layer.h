@@ -12,7 +12,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include <cassert> // for assert()
+
 #include "Node.h"
 #include "Utils.h"
 
@@ -38,14 +38,11 @@ public:
                                       constant_weight_init);
     }
 
-    std::pair<std::function<double(double)>,
-      std::function<double(double)> > *pair;
-    bool ret_val = utils::ActivationFunctionsManager::Singleton().
-      GetActivationFunctionPair(activation_function,
-                                &pair);
-    assert(ret_val);
-    m_activation_function = (*pair).first;
-    m_deriv_activation_function = (*pair).second;
+    utils::functionWithDeriv pair =
+                  utils::ActivationFunctionsManager::Singleton().
+                      GetActivationFunctionPair(activation_function);
+    m_activation_function = pair.first;
+    m_deriv_activation_function = pair.second;
     m_activation_function_str = activation_function;
   };
 
@@ -151,6 +148,7 @@ public:
       m_nodes[i].SaveNode(file);
     }
   };
+
   void LoadLayer(FILE * file) {
     m_nodes.clear();
 
@@ -162,14 +160,10 @@ public:
     m_activation_function_str.resize(str_size);
     fread(&(m_activation_function_str[0]), sizeof(char), str_size, file);
 
-    std::pair<std::function<double(double)>,
-      std::function<double(double)> > *pair;
-    bool ret_val = utils::ActivationFunctionsManager::Singleton().
-      GetActivationFunctionPair(m_activation_function_str,
-                                &pair);
-    assert(ret_val);
-    m_activation_function = (*pair).first;
-    m_deriv_activation_function = (*pair).second;
+    utils::functionWithDeriv pair = utils::ActivationFunctionsManager::Singleton().
+                            GetActivationFunctionPair(m_activation_function_str );
+    m_activation_function = pair.first;
+    m_deriv_activation_function = pair.second;
     
     m_nodes.resize(m_num_nodes);
     for (size_t i = 0; i < m_nodes.size(); i++) {
