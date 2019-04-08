@@ -13,9 +13,13 @@
 #include <vector>
 #include <algorithm>
 #include <exception>
+#include <memory>
+
 #include "Layer.h"
 #include "Sample.h"
 #include "Utils.h"
+#include "MlpInspector.h"
+
 
 class MLP {
 public:
@@ -45,6 +49,8 @@ public:
   std::vector<std::vector<double>> GetLayerWeights( size_t layer_i );
   void SetLayerWeights( size_t layer_i, std::vector<std::vector<double>> & weights );
 
+  void AddInspector( std::shared_ptr<MlpInspector> mlpInspector );
+
 protected:
   void UpdateWeights(const std::vector<std::vector<double>> & all_layers_activations,
                      const std::vector<double> &error,
@@ -57,13 +63,29 @@ private:
                  const std::vector<std::string> & layers_activfuncs,
                  bool use_constant_weight_init,
                  double constant_weight_init = 0.5,
-                 bool use_softmax_on_each_output = true);
+                 bool use_softmax_on_each_output = true,
+                 std::string error_function = "error");
+
+  void callInspectorAfterCreateNetwork();
+  void callInspectorBeforeDestroyNetwork();
+  void callInspectorBeforeTraining();
+  void callInspectorAfterTraining();
+
   size_t m_num_inputs{ 0 };
   int m_num_outputs{ 0 };
   int m_num_hidden_layers{ 0 };
   std::vector<uint64_t> m_layers_nodes;
   std::vector<Layer> m_layers;
   bool use_softmax_on_each_output = true;
+  utils::functionTwoArgDeriv error_function_pair;
+  std::vector<std::shared_ptr<MlpInspector>> inspectorVector;
+
 };
 
 #endif //MLP_H
+
+
+
+
+
+

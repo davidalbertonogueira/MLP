@@ -29,39 +29,59 @@ MLP::MLP(const std::vector<uint64_t> & layers_nodes,
             use_constant_weight_init,
             constant_weight_init,
             use_softmax_on_each_output );
+
+  callInspectorAfterCreateNetwork();
 };
+
+
+void MLP::callInspectorAfterCreateNetwork(){
+    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
+        instance->afterCreateNetwork( m_layers );
+    }
+}
 
 MLP::MLP(const std::string & filename) {
   LoadMLPNetwork(filename);
+  callInspectorAfterCreateNetwork();
 }
 
 MLP::~MLP() {
-  m_num_inputs = 0;
-  m_num_outputs = 0;
-  m_num_hidden_layers = 0;
-  m_layers_nodes.clear();
-  m_layers.clear();
+    callInspectorBeforeDestroyNetwork();
+    m_num_inputs = 0;
+    m_num_outputs = 0;
+    m_num_hidden_layers = 0;
+    m_layers_nodes.clear();
+    m_layers.clear();
 };
+
+void MLP::callInspectorBeforeDestroyNetwork(){
+    for(std::shared_ptr<MlpInspector> instance : inspectorVector){
+        instance->beforeDestroyNetwork( m_layers );
+    }
+}
 
 void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
                     const std::vector<std::string> & layers_activfuncs,
                     bool use_constant_weight_init,
                     double constant_weight_init,
-                    bool use_softmax_on_each_output ) {
-  m_layers_nodes = layers_nodes;
-  m_num_inputs = m_layers_nodes[0];
-  m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
-  m_num_hidden_layers = m_layers_nodes.size() - 2;
-  MLP::use_softmax_on_each_output = use_softmax_on_each_output;
+                    bool use_softmax_on_each_output,
+                    std::string error_function ) {
 
-  for (size_t i = 0; i < m_layers_nodes.size() - 1; i++) {
+    m_layers_nodes = layers_nodes;
+    m_num_inputs = m_layers_nodes[0];
+    m_num_outputs = m_layers_nodes[m_layers_nodes.size() - 1];
+    m_num_hidden_layers = m_layers_nodes.size() - 2;
+    MLP::use_softmax_on_each_output = use_softmax_on_each_output;
+    error_function_pair = utils::ErrorFunctionsManager::Singleton().GetErrorFunctionPair( error_function );
+
+    for (size_t i = 0; i < m_layers_nodes.size() - 1; i++) {
     m_layers.emplace_back(Layer(m_layers_nodes[i],
                                 m_layers_nodes[i + 1],
                                 layers_activfuncs[i],
                                 use_constant_weight_init,
                                 constant_weight_init));
-  }
-};
+    }
+}
 
 void MLP::SaveMLPNetwork(const std::string & filename)const {
   FILE * file;
@@ -76,6 +96,8 @@ void MLP::SaveMLPNetwork(const std::string & filename)const {
   }
   fclose(file);
 };
+
+
 void MLP::LoadMLPNetwork(const std::string & filename) {
   m_layers_nodes.clear();
   m_layers.clear();
@@ -201,9 +223,10 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
                           double min_error_cost,
                           bool output_log) {
 
-    if( output_log )
+  if( output_log )
         log_weights( "Starting weights" );
 
+  callInspectorBeforeTraining();
   int i = 0;
   double current_iteration_cost_function = 0.0;
 
@@ -229,10 +252,8 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       }
 
       for (size_t j = 0; j < predicted_output.size(); j++) {
-        current_iteration_cost_function +=
-          (std::pow)((correct_output[j] - predicted_output[j]), 2);
-        deriv_error_output[j] =
-          -2 * (correct_output[j] - predicted_output[j]);
+          current_iteration_cost_function += error_function_pair.first( correct_output[j], predicted_output[j] );
+          deriv_error_output[j] = -error_function_pair.second( correct_output[j], predicted_output[j] );
       }
 
       UpdateWeights(all_layers_activations,
@@ -248,6 +269,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
     if (current_iteration_cost_function < min_error_cost)
       break;
   }
+  callInspectorAfterTraining();
   LOG(INFO) << "Iteration " << i << " cost function f(error): "
     << current_iteration_cost_function;
 
@@ -260,6 +282,18 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       log_weights( "Final weights" );
 };
 
+
+void MLP::callInspectorBeforeTraining(){
+    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
+        instance->onEnterTraining( m_layers );
+    }
+}
+
+void MLP::callInspectorAfterTraining(){
+    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
+        instance->onEndTraining( m_layers );
+    }
+}
 
 size_t MLP::GetNumLayers()
 {
@@ -293,6 +327,12 @@ void MLP::SetLayerWeights( size_t layer_i, std::vector<std::vector<double>> & we
     }
     else
         throw new std::logic_error("Incorrect layer number in SetLayerWeights call");
+}
+
+void MLP::AddInspector( std::shared_ptr<MlpInspector> mlpInspector )
+{
+    MLP::inspectorVector.push_back( mlpInspector );
+
 }
 
 
