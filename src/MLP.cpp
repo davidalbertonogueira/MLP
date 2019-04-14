@@ -29,36 +29,20 @@ MLP::MLP(const std::vector<uint64_t> & layers_nodes,
             use_constant_weight_init,
             constant_weight_init,
             use_softmax_on_each_output );
-
-  callInspectorAfterCreateNetwork();
-};
-
-
-void MLP::callInspectorAfterCreateNetwork(){
-    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
-        instance->afterCreateNetwork( m_layers );
-    }
 }
+
 
 MLP::MLP(const std::string & filename) {
   LoadMLPNetwork(filename);
-  callInspectorAfterCreateNetwork();
 }
 
 MLP::~MLP() {
-    callInspectorBeforeDestroyNetwork();
     m_num_inputs = 0;
     m_num_outputs = 0;
     m_num_hidden_layers = 0;
     m_layers_nodes.clear();
     m_layers.clear();
 };
-
-void MLP::callInspectorBeforeDestroyNetwork(){
-    for(std::shared_ptr<MlpInspector> instance : inspectorVector){
-        instance->beforeDestroyNetwork( m_layers );
-    }
-}
 
 void MLP::CreateMLP(const std::vector<uint64_t> & layers_nodes,
                     const std::vector<std::string> & layers_activfuncs,
@@ -237,6 +221,8 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       std::vector<double> predicted_output;
       std::vector< std::vector<double> > all_layers_activations;
 
+      callInspectorBeforeTrainingSample( );
+
       GetOutput(training_sample_with_bias.input_vector(),
                 &predicted_output,
                 &all_layers_activations);
@@ -259,7 +245,10 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       UpdateWeights(all_layers_activations,
                     deriv_error_output,
                     learning_rate);
-    }
+
+      callInspectorAfterTrainingSample();
+
+    } // for
 
 
     if (output_log && ((i % (max_iterations / 10)) == 0))
@@ -285,13 +274,25 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
 
 void MLP::callInspectorBeforeTraining(){
     for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
-        instance->onEnterTraining( m_layers );
+       instance->onEnterTraining( m_layers );
+    }
+}
+
+void MLP::callInspectorBeforeTrainingSample(){
+    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
+        instance->onBeforeTrainingSample( m_layers );
+    }
+}
+
+void MLP::callInspectorAfterTrainingSample(){
+    for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
+        instance->onAfterTrainingSample( m_layers );
     }
 }
 
 void MLP::callInspectorAfterTraining(){
     for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
-        instance->onEndTraining( m_layers );
+       instance->onEndTraining( m_layers );
     }
 }
 

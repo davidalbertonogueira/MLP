@@ -20,11 +20,11 @@
 class MlpInspector
 {
 public:
-    virtual void afterCreateNetwork( std::vector<Layer> layers );
-    virtual void beforeDestroyNetwork( std::vector<Layer> layers );
-    virtual void onEnterTraining( std::vector<Layer> layers );
-    virtual void onEndTraining( std::vector<Layer> layers );
-
+    MlpInspector() {};
+    virtual void onEnterTraining( std::vector<Layer> layers ) = 0;
+    virtual void onBeforeTrainingSample( std::vector<Layer> layers ) = 0;
+    virtual void onAfterTrainingSample( std::vector<Layer> layers ) = 0;
+    virtual void onEndTraining( std::vector<Layer> layers ) = 0;
     virtual ~MlpInspector() {};
 };
 

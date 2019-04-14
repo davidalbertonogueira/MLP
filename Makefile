@@ -49,7 +49,7 @@ IrisDatasetTest: $(TESTPATH)/IrisDatasetTest.o  $(SOURCEPATH)/MLP.o
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 
-MLPTest: $(TESTPATH)/MLPTest.o  $(SOURCEPATH)/MLP.o
+MLPTest: $(TESTPATH)/MLPTest.o $(TESTPATH)/MlpInspectorDummy.o $(SOURCEPATH)/MlpInspector.o $(SOURCEPATH)/MLP.o 
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 	

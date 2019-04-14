@@ -66,9 +66,9 @@ private:
                  bool use_softmax_on_each_output = true,
                  std::string error_function = "error");
 
-  void callInspectorAfterCreateNetwork();
-  void callInspectorBeforeDestroyNetwork();
   void callInspectorBeforeTraining();
+  void callInspectorBeforeTrainingSample();
+  void callInspectorAfterTrainingSample();
   void callInspectorAfterTraining();
 
   size_t m_num_inputs{ 0 };
