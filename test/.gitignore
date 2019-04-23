@@ -1,6 +1,6 @@
 /IrisDatasetTest.o
 /LayerTest.o
-/MLP.o
 /MLPTest.o
+/MlpInspectorDummy.o
 /NodeTest.o
-/MlpInspector.o
+/UtilTest.o
