@@ -28,6 +28,12 @@ public:
     obj.PrintMyself(stream);
     return stream;
   };
+  void setLabel( const std::string &label ){
+      Sample::label = label;
+  }
+  std::string getLabel(){
+      return Sample::label;
+  }
   // to avoid the error "class has virtual method
   // but non virtual destructor"
   virtual ~Sample() {};
@@ -43,6 +49,7 @@ protected:
   }
 
   std::vector<double> m_input_vector;
+  std::string label;
 };
 
 

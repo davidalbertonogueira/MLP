@@ -385,8 +385,6 @@ UNIT(GetWeightsSetWeights) {
 
 UNIT(LearnPatternWithSimpleInspector){
 
-    LOG(INFO) << "The  table" << std::endl;
-
     std::vector<TrainingSample> training_set =
     {
     {{ 0.31, 0.15, 0.52, 0.01, 0.34, 0.76}, { 0 } },
