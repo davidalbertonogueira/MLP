@@ -21,6 +21,8 @@
 #include <typeinfo>
 #include <typeindex>
 #include <cassert>
+#include <exception>
+
 
 #include "Chrono.h"
 #ifdef _WIN32
@@ -30,6 +32,18 @@
 #endif
 
 namespace utils {
+
+//Typical error function
+// error = [measure1 - measure2]^2
+inline double quadratic_error(double measure1, double measure2){
+    return (std::pow) (measure1 - measure2, 2 );
+}
+
+// derivative of the error function
+inline double deriv_quadratic_error(double measure1, double measure2){
+    return 2 * (measure1 - measure2);
+}
+
 //Typical sigmoid function created from input x
 //Returns the sigmoided value
 inline double sigmoid(double x) {
@@ -61,16 +75,64 @@ inline double deriv_linear(double x) {
   return 1;
 };
 
+inline double relu(double x) {
+    if( x > 0 )
+        return x;
+    else
+        return 0.0L;
+}
+
+inline double deriv_relu(double x){
+    if( x > 0 )
+        return 1.0L;
+    else
+        return 0.0L;
+}
+
+
+using functionWithDeriv = std::pair<std::function<double(double)>,
+                                    std::function<double(double)> >;
+using functionTwoArgDeriv = std::pair<std::function<double(double,double)>,
+                                      std::function<double(double,double)> >;
+
+struct ErrorFunctionsManager {
+    functionTwoArgDeriv GetErrorFunctionPair( const std::string & error_func_name ) {
+        auto iter = error_functions_map.find( error_func_name );
+        if( iter != error_functions_map.end() )
+            return iter->second;
+        else
+            throw std::runtime_error("Unknown error function: " +  error_func_name );
+    }
+
+    static ErrorFunctionsManager & Singleton(){
+        static ErrorFunctionsManager instance;
+        return instance;
+    }
+
+private:
+    void AddNewPair( std::string function_name,
+                    std::function<double(double, double)> function,
+                    std::function<double(double, double)> deriv) {
+        error_functions_map.insert( std::make_pair( function_name,
+                std::make_pair( function, deriv ) ) );
+    }
+
+    ErrorFunctionsManager() {
+        AddNewPair("error", quadratic_error, deriv_quadratic_error );
+    }
+
+    std::unordered_map<std::string,
+           functionTwoArgDeriv> error_functions_map;
+};
+
+
 struct ActivationFunctionsManager {
-  bool GetActivationFunctionPair(const std::string & activation_name,
-                                    std::pair<std::function<double(double)>,
-                                    std::function<double(double)> > **pair) {
+  functionWithDeriv GetActivationFunctionPair(const std::string & activation_name ) {
     auto iter = activation_functions_map.find(activation_name);
     if (iter != activation_functions_map.end())
-      *pair = &(iter->second);
+      return iter->second;
     else
-      return false;
-    return true;
+      throw std::runtime_error("Unknown activation function: " + activation_name );
   }
 
   static ActivationFunctionsManager & Singleton() {
@@ -88,13 +150,12 @@ private:
 
   ActivationFunctionsManager() {
     AddNewPair("sigmoid", sigmoid, deriv_sigmoid);
-    AddNewPair("tanh", hyperbolic_tan, deriv_hyperbolic_tan);
-    AddNewPair("linear", linear, deriv_linear);
+    AddNewPair("tanh",    hyperbolic_tan, deriv_hyperbolic_tan);
+    AddNewPair("linear",  linear, deriv_linear);
+    AddNewPair("relu",    relu, deriv_relu);
   };
 
-  std::unordered_map<std::string,
-    std::pair<std::function<double(double)>, std::function<double(double)> > >
-    activation_functions_map;
+  std::unordered_map<std::string, functionWithDeriv > activation_functions_map;
 };
 
 struct gen_rand {

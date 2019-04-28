@@ -6,12 +6,14 @@ PROJNAME = mlp
 
 HEADERPATH = ./src
 SOURCEPATH = ./src
+TESTPATH = ./test
 
 LOCALDEPSINCLUDES = ./deps
 AUXINCLUDES = 
+SRCINCLUDES = ./src
 AUXLIBS = 
 
-INCLUDES = -I$(LOCALDEPSINCLUDES) -I$(AUXINCLUDES)  
+INCLUDES = -I$(LOCALDEPSINCLUDES) -I$(SRCINCLUDES)
 LIBS = -L$(AUXLIBS) 
 #LIBS += -L/usr/local/lib/
 #rlunaro: removed optimization for tests: -O3
@@ -30,7 +32,7 @@ OBJS = $(SRCS:.cpp=.o)
 TXTS = $(wildcard *.txt)
 SCRIPTS = $(wildcard *.sh)
 
-all : IrisDatasetTest MLPTest LayerTest NodeTest $(PROJNAME).a $(PROJNAME).so
+all : IrisDatasetTest MLPTest LayerTest NodeTest UtilTest $(PROJNAME).a $(PROJNAME).so
 
 $(PROJNAME).a : $(SOURCEPATH)/MLP.o
 	@echo Creating static lib $@
@@ -43,27 +45,36 @@ $(PROJNAME).so : $(SOURCEPATH)/MLP.o
 %.o: %.cpp $(HDRS)
 	$(CC) -c $(CFLAGS) $(LFLAGS) -o $@ $<
 
-IrisDatasetTest: $(SOURCEPATH)/IrisDatasetTest.o  $(SOURCEPATH)/MLP.o
+IrisDatasetTest: $(TESTPATH)/IrisDatasetTest.o  $(SOURCEPATH)/MLP.o
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 
-MLPTest: $(SOURCEPATH)/MLPTest.o  $(SOURCEPATH)/MLP.o
+MLPTest: $(TESTPATH)/MLPTest.o $(TESTPATH)/MlpInspectorDummy.o $(SOURCEPATH)/MlpInspector.o $(SOURCEPATH)/MLP.o 
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 	
-LayerTest: $(SOURCEPATH)/LayerTest.o  $(SOURCEPATH)/MLP.o
+LayerTest: $(TESTPATH)/LayerTest.o  $(SOURCEPATH)/MLP.o
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
 	
-NodeTest: $(SOURCEPATH)/NodeTest.o  $(SOURCEPATH)/MLP.o
+NodeTest: $(TESTPATH)/NodeTest.o  $(SOURCEPATH)/MLP.o
 	@echo Compiling program $@
 	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
+
+UtilTest: $(TESTPATH)/UtilTest.o
+	@echo Compiling program $@
+	$(CC)  $^ $(CFLAGS) $(LFLAGS) -o $@
+
 clean:
 	@echo Clean
-	rm -f *~ $(SOURCEPATH)/*.o *~
+	rm -f *~ $(SOURCEPATH)/*.o $(TESTPATH)/*.o *~ 
 	@echo Success
 
 cleanall:
 	@echo Clean All
-	rm -f *~ $(SOURCEPATH)/*.o *~ $(PROJNAME).a $(PROJNAME).so IrisDatasetTest MLPTest LayerTest NodeTest
+	rm -f *~ $(SOURCEPATH)/*.o $(TESTPATH)/*.o *~ $(PROJNAME).a $(PROJNAME).so IrisDatasetTest MLPTest LayerTest NodeTest UtilTest
 	@echo Success
+
+
+
+

@@ -222,3 +222,16 @@ ModelManifest.xml
 /NodeTest
 /mlp.a
 /mlp.so
+/UtilTest
+/src/IrisDatasetTest.o
+/src/LayerTest.o
+/src/MLP.o
+/src/MLPTest.o
+/src/NodeTest.o
+/src/MlpInspector.o
+/test/IrisDatasetTest.o
+/test/LayerTest.o
+/test/MLPTest.o
+/test/MlpInspectorDummy.o
+/test/NodeTest.o
+/test/UtilTest.o
