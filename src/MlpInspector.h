@@ -10,6 +10,7 @@
 #define SRC_MLPINSPECTOR_H_
 
 #include "Layer.h"
+#include "Sample.h"
 
 /**
  * You can create a class based on this interface to
@@ -20,10 +21,11 @@
 class MlpInspector
 {
 public:
-    MlpInspector() {};
     virtual void onEnterTraining( std::vector<Layer> layers ) = 0;
-    virtual void onBeforeTrainingSample( std::vector<Layer> layers ) = 0;
-    virtual void onAfterTrainingSample( std::vector<Layer> layers ) = 0;
+    virtual void onBeforeTrainingSample( std::vector<Layer> layers,
+                                         const TrainingSample & trainingSample ) = 0;
+    virtual void onAfterTrainingSample( std::vector<Layer> layers,
+                                         const TrainingSample & trainingSample ) = 0;
     virtual void onEndTraining( std::vector<Layer> layers ) = 0;
     virtual ~MlpInspector() {};
 };

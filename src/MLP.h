@@ -67,8 +67,8 @@ private:
                  std::string error_function = "error");
 
   void callInspectorBeforeTraining();
-  void callInspectorBeforeTrainingSample();
-  void callInspectorAfterTrainingSample();
+  void callInspectorBeforeTrainingSample( const TrainingSample &training_sample );
+  void callInspectorAfterTrainingSample( const TrainingSample &training_sample );
   void callInspectorAfterTraining();
 
   size_t m_num_inputs{ 0 };

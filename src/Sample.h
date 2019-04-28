@@ -6,6 +6,7 @@
 #define TRAININGSAMPLE_H
 
 #include <iostream>
+#include <memory>
 #include <stdlib.h>
 #include <vector>
 
@@ -34,6 +35,15 @@ public:
   std::string getLabel(){
       return Sample::label;
   }
+  /**
+   * Related data for other uses
+   */
+  void setRelatedData( std::shared_ptr<void> relatedData ){
+      Sample::relatedData = relatedData;
+  }
+  std::shared_ptr<void> getRelatedData(){
+      return Sample::relatedData;
+  }
   // to avoid the error "class has virtual method
   // but non virtual destructor"
   virtual ~Sample() {};
@@ -50,6 +60,7 @@ protected:
 
   std::vector<double> m_input_vector;
   std::string label;
+  std::shared_ptr<void> relatedData;
 };
 
 

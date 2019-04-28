@@ -221,7 +221,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
       std::vector<double> predicted_output;
       std::vector< std::vector<double> > all_layers_activations;
 
-      callInspectorBeforeTrainingSample( );
+      callInspectorBeforeTrainingSample( training_sample_with_bias );
 
       GetOutput(training_sample_with_bias.input_vector(),
                 &predicted_output,
@@ -246,7 +246,7 @@ void MLP::Train(const std::vector<TrainingSample> &training_sample_set_with_bias
                     deriv_error_output,
                     learning_rate);
 
-      callInspectorAfterTrainingSample();
+      callInspectorAfterTrainingSample( training_sample_with_bias );
 
     } // for
 
@@ -278,15 +278,15 @@ void MLP::callInspectorBeforeTraining(){
     }
 }
 
-void MLP::callInspectorBeforeTrainingSample(){
+void MLP::callInspectorBeforeTrainingSample( const TrainingSample &training_sample ){
     for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
-        instance->onBeforeTrainingSample( m_layers );
+        instance->onBeforeTrainingSample( m_layers, training_sample );
     }
 }
 
-void MLP::callInspectorAfterTrainingSample(){
+void MLP::callInspectorAfterTrainingSample( const TrainingSample &training_sample ){
     for( std::shared_ptr<MlpInspector> instance : inspectorVector ){
-        instance->onAfterTrainingSample( m_layers );
+        instance->onAfterTrainingSample( m_layers, training_sample );
     }
 }
 
