@@ -63,7 +63,7 @@ bool load_data(int *samples,
     double *p = &((*input)[0]) + i * input_size;
     double *c = &((*iris_class)[0]) + i * number_classes;
     for (int k = 0; k < number_classes; k++) {
-      c[i] = 0.0;
+      c[k] = 0.0;
     }
 
     fgets(line, 1024, in);
