@@ -8,7 +8,7 @@ MLP stands for [multilayer perceptron](https://en.wikipedia.org/wiki/Multilayer_
 This project is a simple & fast C++ implementation of a MLP, oriented towards hacking and rapid prototyping.
 It is well-tested and includes multiple tests for each component as well as use cases.
 
-This project is maintained by [David Nogueira](http://web.tecnico.ulisboa.pt/david.jacome.nogueira/).
+This project is maintained by [David Nogueira](https://linkedin.com/in/davidjacomenogueira).
 
 
 ## Featuring
